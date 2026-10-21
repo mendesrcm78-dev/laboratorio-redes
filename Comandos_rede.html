@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Guia Interativo de Comandos de Rede</title>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--text:#172033;--muted:#617087;--line:#dce4ef;--accent:#1769e0;--accent2:#e9f1ff;--code:#101827;--codeText:#dce8ff;--shadow:0 8px 28px #182c4a0d}
+[data-theme="dark"]{--bg:#0e1420;--panel:#161f2e;--text:#edf3ff;--muted:#a4b2c8;--line:#2b394d;--accent:#7db0ff;--accent2:#1b3150;--code:#080d15;--codeText:#dce8ff;--shadow:0 8px 28px #0003}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(125deg,#102a56,#1769e0 65%,#4b91f4);color:white;padding:32px 20px 28px}
+.hero,.wrap{max-width:1120px;margin:auto}.eyebrow{font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;font-weight:800;opacity:.85}.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.1;margin:.5rem 0}.hero p{max-width:700px;margin:0;color:#e5efff}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+button,.button{border:1px solid var(--line);border-radius:10px;padding:10px 13px;font:inherit;font-weight:650;cursor:pointer;background:var(--panel);color:var(--text);transition:transform .12s,border-color .12s}button:hover{border-color:var(--accent)}button:active{transform:scale(.98)}.hero button{background:#ffffff17;border-color:#ffffff66;color:white}
+.wrap{padding:22px 18px 50px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}.stat,.panel,.command-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.stat{padding:15px 17px}.stat strong{display:block;font-size:1.45rem}.stat span{font-size:.88rem;color:var(--muted)}
+.controls{display:grid;grid-template-columns:minmax(200px,1fr) minmax(180px,250px);gap:12px;margin:18px 0}.field{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);font:inherit}.categories{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.categories button{font-size:.9rem;padding:8px 12px}.categories button.active{background:var(--accent2);border-color:var(--accent);color:var(--accent)}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:24px 0 12px}.section-heading h2{font-size:1.25rem;margin:0}.muted{color:var(--muted);font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.command-card{padding:16px;min-width:0}.card-top{display:flex;align-items:start;justify-content:space-between;gap:10px}.command{font:700 .98rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;color:var(--accent)}.tag{white-space:nowrap;border-radius:999px;background:var(--accent2);color:var(--accent);font-size:.72rem;font-weight:750;padding:4px 8px}.description{color:var(--muted);margin:10px 0 14px;font-size:.94rem}.card-actions{display:flex;gap:8px;flex-wrap:wrap}.card-actions button{font-size:.86rem;padding:8px 10px}.copy{background:var(--accent);color:white;border-color:var(--accent)}.empty{padding:30px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:14px}
+.panel{padding:18px;margin-top:22px}.panel h2{margin:0 0 8px;font-size:1.2rem}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.step{padding:13px;border:1px solid var(--line);border-radius:12px}.step b{display:block;margin-bottom:5px}.step code{font-size:.83rem;overflow-wrap:anywhere;color:var(--accent)}.notice{font-size:.9rem;color:var(--muted);margin-top:12px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--code);color:var(--codeText);padding:10px 16px;border-radius:10px;box-shadow:var(--shadow);z-index:5;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}footer{text-align:center;color:var(--muted);font-size:.85rem;padding:18px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:1.2rem}.wrap{padding:16px 12px 36px}header{padding:26px 16px}}
+@media(max-width:390px){.steps{grid-template-columns:1fr}.stat span{font-size:.78rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="eyebrow">Windows • Redes • Diagnóstico</div>
+    <h1>Guia Interativo de Comandos de Rede</h1>
+    <p>Pesquise comandos, filtre por categoria e copie com um clique. Um guia rápido para estudar e solucionar problemas de conectividade no Windows.</p>
+    <div class="toolbar">
+      <button id="themeBtn" type="button" aria-label="Alternar tema">☾ Alternar tema</button>
+      <button id="showAllBtn" type="button">Mostrar todos</button>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="stats">
+    <div class="stat"><strong id="totalCount">0</strong><span>comandos no guia</span></div>
+    <div class="stat"><strong id="shownCount">0</strong><span>resultados exibidos</span></div>
+    <div class="stat"><strong>Win + R</strong><span>abre a caixa Executar</span></div>
+  </div>
+  <div class="controls">
+    <input id="search" class="field" type="search" placeholder="Buscar comando ou descrição…" aria-label="Buscar comando ou descrição">
+    <select id="categorySelect" class="field" aria-label="Filtrar por categoria">
+      <option value="Todas">Todas as categorias</option>
+    </select>
+  </div>
+  <nav id="categoryButtons" class="categories" aria-label="Categorias rápidas"></nav>
+  <div class="section-heading">
+    <div><h2>Biblioteca de comandos</h2><div class="muted">Use “Copiar” para levar o comando ao Windows.</div></div>
+  </div>
+  <div id="commands" class="grid" aria-live="polite"></div>
+
+  <section class="panel">
+    <h2>Roteiro rápido: computador sem Internet</h2>
+    <p class="muted">Siga esta sequência para descobrir em qual etapa a conexão está falhando.</p>
+    <div class="steps">
+      <div class="step"><b>1. Conferir o IP</b><code>ipconfig /all</code><div class="muted">Verifique IP, gateway e DNS.</div></div>
+      <div class="step"><b>2. Testar o gateway</b><code>ping 192.168.1.1</code><div class="muted">Troque pelo IP real do roteador.</div></div>
+      <div class="step"><b>3. Testar a Internet</b><code>ping 8.8.8.8</code><div class="muted">Testa um IP público.</div></div>
+      <div class="step"><b>4. Testar DNS</b><code>nslookup google.com</code><div class="muted">Verifica a resolução de nomes.</div></div>
+    </div>
+    <p class="notice">Atenção: <code>ipconfig /release</code> desconecta temporariamente a interface IPv4 ao liberar o endereço. Comandos de rede devem ser executados no CMD ou PowerShell quando indicado; nem todos funcionam diretamente na caixa Executar.</p>
+  </section>
+  <footer>Guia de estudo • Alguns comandos exigem permissões de administrador ou variam conforme a versão do Windows.</footer>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite">Comando copiado!</div>
+<script>
+const commands = [
+{cmd:"ncpa.cpl",desc:"Abre Conexões de Rede para gerenciar Ethernet e Wi-Fi.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"devmgmt.msc",desc:"Abre o Gerenciador de Dispositivos para verificar placas e drivers.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"firewall.cpl",desc:"Abre as configurações básicas do Firewall do Windows.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"wf.msc",desc:"Abre o Firewall do Windows com Segurança Avançada.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"services.msc",desc:"Abre a lista de serviços do Windows.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"inetcpl.cpl",desc:"Abre as Propriedades da Internet.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"compmgmt.msc",desc:"Abre o Gerenciamento do Computador.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"fsmgmt.msc",desc:"Gerencia pastas compartilhadas, sessões e arquivos abertos.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"mstsc",desc:"Abre a Conexão de Área de Trabalho Remota.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"control.exe /name Microsoft.NetworkAndSharingCenter",desc:"Abre a Central de Rede e Compartilhamento clássica.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"ms-settings:network",desc:"Abre Rede e Internet nas Configurações do Windows.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"ms-settings:network-ethernet",desc:"Abre as configurações de Ethernet.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"ms-settings:network-wifi",desc:"Abre as configurações de Wi-Fi.",cat:"Executar (Win + R)",where:"Executar"},
+{cmd:"ipconfig",desc:"Mostra os endereços IP das interfaces de rede.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"ipconfig /all",desc:"Mostra detalhes de IP, MAC, DHCP, gateway e DNS.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"ipconfig /release",desc:"Libera o endereço IPv4 obtido por DHCP; pode interromper a conexão.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"ipconfig /renew",desc:"Solicita um novo endereço IPv4 ao servidor DHCP.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"ipconfig /flushdns",desc:"Limpa o cache de resolução DNS do Windows.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"ipconfig /displaydns",desc:"Exibe entradas armazenadas no cache DNS.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"ping 192.168.1.1",desc:"Testa a conectividade com o gateway de exemplo. Ajuste o IP à sua rede.",cat:"Conectividade",where:"CMD/PowerShell"},
+{cmd:"ping 8.8.8.8",desc:"Testa conectividade com um IP público, sem depender de DNS.",cat:"Conectividade",where:"CMD/PowerShell"},
+{cmd:"ping google.com",desc:"Testa conectividade e resolução de nome DNS.",cat:"Conectividade",where:"CMD/PowerShell"},
+{cmd:"tracert google.com",desc:"Mostra os saltos percorridos até o destino.",cat:"Conectividade",where:"CMD/PowerShell"},
+{cmd:"pathping google.com",desc:"Analisa latência e perda de pacotes ao longo da rota.",cat:"Conectividade",where:"CMD/PowerShell"},
+{cmd:"nslookup google.com",desc:"Consulta DNS para resolver um nome de domínio.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"arp -a",desc:"Exibe entradas do cache ARP, relacionando IPs e MACs conhecidos.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"route print",desc:"Mostra a tabela de roteamento IPv4 e IPv6.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"netstat -ano",desc:"Lista conexões, portas em escuta e IDs de processo (PID).",cat:"Portas e conexões",where:"CMD/PowerShell"},
+{cmd:"getmac /v",desc:"Exibe os endereços MAC dos adaptadores.",cat:"Diagnóstico IP e DNS",where:"CMD/PowerShell"},
+{cmd:"netsh interface show interface",desc:"Lista as interfaces de rede e seus estados.",cat:"Avançado e Wi-Fi",where:"CMD/PowerShell"},
+{cmd:"netsh wlan show interfaces",desc:"Exibe estado, SSID, sinal e detalhes da interface Wi-Fi.",cat:"Avançado e Wi-Fi",where:"CMD/PowerShell"},
+{cmd:"netsh wlan show networks mode=bssid",desc:"Lista redes Wi-Fi detectadas e, quando disponível, BSSID e canal.",cat:"Avançado e Wi-Fi",where:"CMD/PowerShell"},
+{cmd:"netsh wlan show drivers",desc:"Exibe informações do driver e recursos Wi-Fi suportados.",cat:"Avançado e Wi-Fi",where:"CMD/PowerShell"},
+{cmd:"Get-NetAdapter",desc:"Lista adaptadores de rede no PowerShell.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Get-NetIPConfiguration",desc:"Mostra a configuração IP atual no PowerShell.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Get-NetIPAddress",desc:"Lista os endereços IP configurados.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Get-DnsClientServerAddress",desc:"Mostra os servidores DNS configurados por interface.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Test-NetConnection 192.168.1.1",desc:"Testa a conectividade com um destino; substitua pelo IP correto.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Test-NetConnection servidor -Port 443",desc:"Testa conexão TCP com a porta 443 do host indicado.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Get-NetTCPConnection",desc:"Lista conexões TCP no PowerShell.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"Get-NetRoute",desc:"Exibe rotas de rede no PowerShell.",cat:"PowerShell",where:"PowerShell"},
+{cmd:"\\\\192.168.1.10",desc:"Abre os compartilhamentos disponíveis em um computador da rede.",cat:"Compartilhamento",where:"Executar/Explorador"},
+{cmd:"\\\\servidor\\compartilhamento",desc:"Acessa uma pasta compartilhada; troque pelos nomes reais.",cat:"Compartilhamento",where:"Executar/Explorador"},
+{cmd:"\\\\localhost",desc:"Tenta abrir os compartilhamentos do próprio computador.",cat:"Compartilhamento",where:"Executar/Explorador"}
+];
+const categories = ["Todas",...new Set(commands.map(x=>x.cat))];
+const search = document.getElementById("search"), select = document.getElementById("categorySelect");
+const nav = document.getElementById("categoryButtons"), list = document.getElementById("commands");
+const toast = document.getElementById("toast");
+categories.slice(1).forEach(cat=>{const opt=document.createElement("option");opt.value=cat;opt.textContent=cat;select.appendChild(opt)});
+function makeButton(label,cls,fn){const b=document.createElement("button");b.type="button";b.textContent=label;if(cls)b.className=cls;b.addEventListener("click",fn);return b}
+function activeCategory(cat){select.value=cat;render();[...nav.children].forEach(b=>b.classList.toggle("active",b.dataset.cat===cat))}
+categories.forEach(cat=>{const b=makeButton(cat==="Todas"?"Todas":cat,"",()=>activeCategory(cat));b.dataset.cat=cat;nav.appendChild(b)});
+function notify(msg){toast.textContent=msg;toast.classList.add("show");clearTimeout(notify.timer);notify.timer=setTimeout(()=>toast.classList.remove("show"),1700)}
+async function copyText(text){try{await navigator.clipboard.writeText(text);notify("Comando copiado!")}catch(e){const t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");notify("Comando copiado!")}catch(_){notify("Não foi possível copiar automaticamente.")}t.remove()}}
+function render(){
+ const q=search.value.trim().toLowerCase(), cat=select.value;
+ const filtered=commands.filter(x=>(cat==="Todas"||x.cat===cat)&&(x.cmd+" "+x.desc+" "+x.cat+" "+x.where).toLowerCase().includes(q));
+ document.getElementById("totalCount").textContent=commands.length;
+ document.getElementById("shownCount").textContent=filtered.length;
+ list.replaceChildren();
+ if(!filtered.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Nenhum comando encontrado. Tente outra palavra ou categoria.";list.appendChild(empty);return}
+ filtered.forEach(x=>{
+   const card=document.createElement("article");card.className="command-card";
+   const top=document.createElement("div");top.className="card-top";
+   const code=document.createElement("div");code.className="command";code.textContent=x.cmd;
+   const tag=document.createElement("span");tag.className="tag";tag.textContent=x.where;
+   top.append(code,tag);
+   const desc=document.createElement("p");desc.className="description";desc.textContent=x.desc;
+   const actions=document.createElement("div");actions.className="card-actions";
+   actions.append(makeButton("Copiar comando","copy",()=>copyText(x.cmd)),makeButton("Como usar","",()=>notify(x.where==="Executar"?"Pressione Win + R, digite o comando e pressione Enter.":x.where==="PowerShell"?"Abra o PowerShell e execute o comando.":"Abra o CMD ou PowerShell e execute o comando.")));
+   card.append(top,desc,actions);list.appendChild(card);
+ });
+}
+search.addEventListener("input",render);select.addEventListener("change",()=>{[...nav.children].forEach(b=>b.classList.toggle("active",b.dataset.cat===select.value));render()});
+document.getElementById("showAllBtn").addEventListener("click",()=>{search.value="";activeCategory("Todas")});
+document.getElementById("themeBtn").addEventListener("click",()=>{const dark=document.documentElement.dataset.theme!=="dark";document.documentElement.dataset.theme=dark?"dark":"light";document.getElementById("themeBtn").textContent=dark?"☀ Usar tema claro":"☾ Alternar tema"});
+render();activeCategory("Todas");
+</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌐 Curso Completo de Redes de Computadores</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #070b14;
+      --foreground: #f1f5f9;
+      --card: #111827;
+      --border: #1e293b;
+      --primary: #38bdf8;
+      --secondary: #818cf8;
+      --accent: #10b981;
+      --muted-foreground: #94a3b8;
+    }
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+      50% { box-shadow: 0 0 40px rgba(56, 189, 248, 0.4); }
+    }
+    @keyframes slide-up {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+    }
+    @keyframes orbit2 {
+      0% { transform: rotate(120deg) translateX(90px) rotate(-120deg); }
+      100% { transform: rotate(480deg) translateX(90px) rotate(-480deg); }
+    }
+    @keyframes orbit3 {
+      0% { transform: rotate(240deg) translateX(150px) rotate(-240deg); }
+      100% { transform: rotate(600deg) translateX(150px) rotate(-600deg); }
+    }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .animate-slide-up { animation: slide-up 0.8s ease-out forwards; }
+    .gradient-bg {
+      background: linear-gradient(-45deg, #0ea5e9, #6366f1, #8b5cf6, #06b6d4);
+      background-size: 400% 400%;
+      animation: gradient-shift 8s ease infinite;
+    }
+    .glass {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: 0 20px 60px rgba(56, 189, 248, 0.15);
+    }
+    .module-item {
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+    .module-item:hover {
+      background: rgba(56, 189, 248, 0.08);
+      padding-left: 1.5rem;
+    }
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased overflow-x-hidden">
+
+  <!-- Animated Background -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/3 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="relative z-10 glass border-b border-[var(--border)] sticky top-0">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl gradient-bg flex items-center justify-center shadow-lg shadow-sky-500/30 animate-glow">
+          <span class="text-2xl">🌐</span>
+        </div>
+        <div>
+          <p class="text-xs font-bold uppercase tracking-widest text-sky-400">Curso de Tecnologia da Informação</p>
+          <h1 class="text-xl font-black tracking-tight">Redes de Computadores</h1>
+          <div class="flex items-center gap-2 mt-0.5">
+            <span class="text-[11px] text-slate-400">Instrutor:</span>
+            <span class="text-[11px] font-semibold text-emerald-400">👤 Prof. César</span>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-4">
+        <div class="flex items-center gap-2 px-4 py-2 rounded-xl glass">
+          <span class="text-sm text-[var(--muted-foreground)]">17 Módulos</span>
+          <span class="text-sky-400">•</span>
+          <span class="text-sm text-[var(--muted-foreground)]">2 Partes</span>
+          <span class="text-sky-400">•</span>
+          <span class="text-sm text-[var(--muted-foreground)]">100% Interativo</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-12 text-center">
+    <div class="animate-slide-up">
+      <!-- Animated Network Diagram -->
+      <div class="relative w-64 h-64 mx-auto mb-8">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center shadow-2xl shadow-sky-500/30 animate-glow z-10">
+            <span class="text-4xl">🖧</span>
+          </div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center" style="animation: orbit 12s linear infinite;">
+          <div class="w-10 h-10 rounded-xl bg-[var(--card)] border border-sky-500/30 flex items-center justify-center shadow-lg">💻</div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center" style="animation: orbit2 8s linear infinite;">
+          <div class="w-10 h-10 rounded-xl bg-[var(--card)] border border-indigo-500/30 flex items-center justify-center shadow-lg">📱</div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center" style="animation: orbit3 15s linear infinite;">
+          <div class="w-10 h-10 rounded-xl bg-[var(--card)] border border-emerald-500/30 flex items-center justify-center shadow-lg">🖨️</div>
+        </div>
+      </div>
+
+      <h2 class="text-4xl md:text-5xl font-black mb-4 leading-tight">
+        Curso Completo de<br>
+        <span class="bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          Redes de Computadores
+        </span>
+      </h2>
+      <p class="text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8">
+        Domine os fundamentos das redes com <strong class="text-sky-400">simuladores interativos</strong>,
+        <strong class="text-indigo-400">animações visuais</strong> e
+        <strong class="text-emerald-400">prática hands-on</strong>.
+        De conceitos básicos até segurança de redes.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <span class="px-4 py-2 rounded-full glass text-sm font-medium text-sky-300">🎮 Simuladores</span>
+        <span class="px-4 py-2 rounded-full glass text-sm font-medium text-indigo-300">✨ Animações</span>
+        <span class="px-4 py-2 rounded-full glass text-sm font-medium text-emerald-300">📝 Quizzes</span>
+        <span class="px-4 py-2 rounded-full glass text-sm font-medium text-amber-300">🔧 Prática</span>
+        <span class="px-4 py-2 rounded-full glass text-sm font-medium text-purple-300">🧠 Para Todos os Níveis</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Course Parts -->
+  <section class="relative z-10 max-w-7xl mx-auto px-6 pb-16">
+    <div class="grid md:grid-cols-2 gap-8">
+
+      <!-- Part 1 -->
+      <div class="glass rounded-3xl p-8 card-hover animate-slide-up" style="animation-delay: 0.2s; opacity: 0;">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-sky-500/30">
+            <span class="text-2xl font-black text-white">P1</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-400">Módulos 1 — 8</span>
+            <h3 class="text-xl font-bold">Fundamentos & Infraestrutura</h3>
+          </div>
+        </div>
+
+        <p class="text-[var(--muted-foreground)] text-sm mb-6 leading-relaxed">
+          Os alicerces das redes: conceitos, classificações, topologias, modelos OSI/TCP-IP,
+          protocolos, meios físicos, cabeamento estruturado e prática de crimpagem.
+        </p>
+
+        <div class="space-y-2 mb-8">
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-sky-500/15 text-sky-400 flex items-center justify-center text-xs font-bold">1</span>
+            <span class="text-sm">Fundamentos de Redes</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">📡 Simulador de Transmissão</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-sky-500/15 text-sky-400 flex items-center justify-center text-xs font-bold">2</span>
+            <span class="text-sm">Classificação das Redes</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">📊 Radar Interativo</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-sky-500/15 text-sky-400 flex items-center justify-center text-xs font-bold">3</span>
+            <span class="text-sm">Topologias de Rede</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">🔄 Sim. de Falhas</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-xs font-bold">4</span>
+            <span class="text-sm">Modelo OSI e TCP/IP</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">📦 Encapsulamento</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-xs font-bold">5</span>
+            <span class="text-sm">Protocolos TCP e UDP</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">🤝 3-Way Handshake</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center text-xs font-bold">6</span>
+            <span class="text-sm">Meios Físicos de Transmissão</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">⚡ Propagação</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center text-xs font-bold">7</span>
+            <span class="text-sm">Cabeamento Estruturado</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">🏢 Subsistemas</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl border border-sky-500/20 bg-sky-500/5">
+            <span class="w-7 h-7 rounded-lg bg-sky-500/25 text-sky-300 flex items-center justify-center text-xs font-bold">8</span>
+            <span class="text-sm font-semibold text-sky-300">Prática de Crimpagem RJ-45</span>
+            <span class="ml-auto text-xs text-sky-400 font-medium">🔧 Lab Virtual</span>
+          </div>
+        </div>
+
+        <a href="file:///C:/Users/Operador/.gemini/antigravity/brain/1ed11a36-e484-4028-9f65-01978a285467/curso-redes-parte1.html"
+           target="_blank"
+           class="block w-full text-center py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-cyan-600 text-white font-bold text-lg shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] transition-all">
+          🚀 Iniciar Parte 1
+        </a>
+      </div>
+
+      <!-- Part 2 -->
+      <div class="glass rounded-3xl p-8 card-hover animate-slide-up" style="animation-delay: 0.4s; opacity: 0;">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <span class="text-2xl font-black text-white">P2</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Módulos 9 — 17</span>
+            <h3 class="text-xl font-bold">Avançado & Prática</h3>
+          </div>
+        </div>
+
+        <p class="text-[var(--muted-foreground)] text-sm mb-6 leading-relaxed">
+          Equipamentos, endereçamento IPv4, o mega simulador de sub-redes, WiFi,
+          compartilhamento, comandos de rede e segurança.
+        </p>
+
+        <div class="space-y-2 mb-8">
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-xs font-bold">9</span>
+            <span class="text-sm">Equipamentos Ativos</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">🔌 Sim. de Pacotes</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-xs font-bold">10</span>
+            <span class="text-sm">Endereçamento IPv4</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">🔢 Conversor Binário</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/5">
+            <span class="w-7 h-7 rounded-lg bg-amber-500/25 text-amber-300 flex items-center justify-center text-xs font-bold">11</span>
+            <span class="text-sm font-semibold text-amber-300">Sub-redes — MEGA SIMULADOR ⭐</span>
+            <span class="ml-auto text-xs text-amber-400 font-medium">🏢 Metáfora Visual</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs font-bold">12</span>
+            <span class="text-sm">Fundamentos de WiFi</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">📶 Propagação RF</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs font-bold">13</span>
+            <span class="text-sm">Tipos de WiFi (802.11)</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">📅 Linha do Tempo</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs font-bold">14</span>
+            <span class="text-sm">Configuração de Rede WiFi</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">⚙️ Mockup Roteador</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl">
+            <span class="w-7 h-7 rounded-lg bg-rose-500/15 text-rose-400 flex items-center justify-center text-xs font-bold">15</span>
+            <span class="text-sm">Compartilhamento de Recursos</span>
+            <span class="ml-auto text-xs text-[var(--muted-foreground)]">🖨️ Impressora/Nuvem</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/25 text-emerald-300 flex items-center justify-center text-xs font-bold">16</span>
+            <span class="text-sm font-semibold text-emerald-300">Comandos de Rede</span>
+            <span class="ml-auto text-xs text-emerald-400 font-medium">💻 Terminal CLI</span>
+          </div>
+          <div class="module-item flex items-center gap-3 p-2.5 rounded-xl border border-rose-500/20 bg-rose-500/5">
+            <span class="w-7 h-7 rounded-lg bg-rose-500/25 text-rose-300 flex items-center justify-center text-xs font-bold">17</span>
+            <span class="text-sm font-semibold text-rose-300">Segurança Básica em Redes</span>
+            <span class="ml-auto text-xs text-rose-400 font-medium">🛡️ Sim. Ameaças</span>
+          </div>
+        </div>
+
+        <a href="file:///C:/Users/Operador/.gemini/antigravity/brain/428bb82a-e5c3-4a73-8383-89b308636eba/curso-redes-parte2.html"
+           target="_blank"
+           class="block w-full text-center py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-lg shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all">
+          🚀 Iniciar Parte 2
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="relative z-10 max-w-7xl mx-auto px-6 pb-16">
+    <h3 class="text-2xl font-bold text-center mb-10">Recursos Especiais</h3>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="glass rounded-2xl p-6 text-center card-hover animate-slide-up" style="animation-delay: 0.5s; opacity: 0;">
+        <div class="text-4xl mb-3 animate-float">🔧</div>
+        <h4 class="font-bold mb-2 text-sky-400">Lab de Crimpagem</h4>
+        <p class="text-xs text-[var(--muted-foreground)]">Drag & drop de fios no conector RJ-45 com testador virtual de LEDs</p>
+      </div>
+      <div class="glass rounded-2xl p-6 text-center card-hover animate-slide-up" style="animation-delay: 0.6s; opacity: 0;">
+        <div class="text-4xl mb-3 animate-float" style="animation-delay: 1s;">🏢</div>
+        <h4 class="font-bold mb-2 text-amber-400">Simulador de Sub-redes</h4>
+        <p class="text-xs text-[var(--muted-foreground)]">Metáfora do edifício, divisor visual, calculadora e modo prática</p>
+      </div>
+      <div class="glass rounded-2xl p-6 text-center card-hover animate-slide-up" style="animation-delay: 0.7s; opacity: 0;">
+        <div class="text-4xl mb-3 animate-float" style="animation-delay: 2s;">💻</div>
+        <h4 class="font-bold mb-2 text-emerald-400">Terminal Interativo</h4>
+        <p class="text-xs text-[var(--muted-foreground)]">Simule ping, ipconfig, tracert, nslookup, netstat e arp</p>
+      </div>
+      <div class="glass rounded-2xl p-6 text-center card-hover animate-slide-up" style="animation-delay: 0.8s; opacity: 0;">
+        <div class="text-4xl mb-3 animate-float" style="animation-delay: 3s;">🛡️</div>
+        <h4 class="font-bold mb-2 text-rose-400">Sim. de Ameaças</h4>
+        <p class="text-xs text-[var(--muted-foreground)]">Visualize ataques MitM, DDoS e Phishing com animações</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative z-10 glass border-t border-[var(--border)] py-8 text-center">
+    <p class="text-[var(--muted-foreground)] text-sm">
+      🌐 Curso de Tecnologia da Informação — Redes de Computadores — Prof. César
+    </p>
+    <p class="text-[var(--muted-foreground)] text-xs mt-2">
+      17 Módulos • 100% Interativo • Simuladores • Quizzes
+    </p>
+  </footer>
+
+</body>
+</html>

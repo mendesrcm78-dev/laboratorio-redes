@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operador de Computador e Redes Locais - Prof. César</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    *{box-sizing:border-box;scroll-behavior:smooth}
+    body{font-family:'Segoe UI',Tahoma,sans-serif;margin:0;background:#0f0d2e;color:#e0e7ff}
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#6366f1;border-radius:3px}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .fade{animation:fadeIn .5s ease forwards;opacity:0}
+    .card{background:#1a1744;border:1px solid rgba(99,102,241,.15);border-radius:16px;padding:20px;transition:.3s}
+    .card:hover{border-color:rgba(99,102,241,.4);transform:translateY(-2px)}
+    .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;color:#fff}
+    .quiz-opt{cursor:pointer;transition:.2s}.quiz-opt:hover{transform:scale(1.01);border-color:#6366f1!important}
+    .quiz-opt.ok{background:#10b981!important;color:#fff!important;border-color:#10b981!important}
+    .quiz-opt.err{background:#ef4444!important;color:#fff!important;border-color:#ef4444!important}
+    .net-node{transition:.3s;cursor:pointer}.net-node:hover{filter:drop-shadow(0 0 8px rgba(99,102,241,.6));transform:scale(1.08)}
+    .sec{max-width:900px;margin:0 auto;padding:0 16px}
+    .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);border-radius:999px;padding:4px 14px;font-size:12px;color:#a5b4fc}
+    @media print{.no-print{display:none!important}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="fixed top-0 inset-x-0 z-50 bg-[#1a1744]/95 backdrop-blur border-b border-indigo-900/40 no-print">
+  <div class="sec flex items-center justify-between h-14">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">RC</div>
+      <span class="font-bold text-sm text-white hidden sm:block">Redes Locais</span>
+    </div>
+    <div class="flex gap-1 text-xs">
+      <a href="#mod" class="px-3 py-2 rounded-lg hover:bg-indigo-900/40 text-indigo-300 hover:text-white transition">Módulos</a>
+      <a href="#quiz" class="px-3 py-2 rounded-lg hover:bg-indigo-900/40 text-indigo-300 hover:text-white transition">Quiz</a>
+      <a href="#glos" class="px-3 py-2 rounded-lg hover:bg-indigo-900/40 text-indigo-300 hover:text-white transition">Glossário</a>
+    </div>
+  </div>
+  <div class="h-1 bg-indigo-950"><div id="pbar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700" style="width:0%"></div></div>
+</nav>
+
+<!-- HERO -->
+<header class="pt-24 pb-12 text-center relative overflow-hidden">
+  <div class="absolute top-10 right-0 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl"></div>
+  <div class="sec relative z-10">
+    <div class="pill mb-4 mx-auto w-fit fade">Curso Profissionalizante</div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold mb-2 fade" style="animation-delay:.1s">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">Operador de Computador</span><br>
+      <span class="text-white">e Redes Locais</span>
+    </h1>
+    <p class="text-indigo-300 text-sm mb-4 fade" style="animation-delay:.2s">Do zero ao básico — linguagem clara para iniciantes</p>
+    <div class="flex justify-center gap-4 text-xs text-indigo-400 fade" style="animation-delay:.3s">
+      <span>👨‍🏫 Instrutor: <strong class="text-white">César</strong></span>
+      <span>📦 8 Módulos</span>
+      <span>🎯 Nível: Básico</span>
+    </div>
+  </div>
+</header>
+
+<!-- ========== MÓDULOS ========== -->
+<main id="mod" class="sec pb-8">
+
+<!-- M1 -->
+<details class="card mb-3 group" open>
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">🌐</span>
+    <span class="flex-1">Módulo 1 — O que é uma Rede?</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-3">
+    <p><strong class="text-indigo-300">Rede</strong> = dois ou mais dispositivos interligados que compartilham dados e recursos (impressoras, arquivos, internet).</p>
+    <p><strong class="text-indigo-300">Surgimento:</strong> Anos 60 → troca de dados entre 2 PCs. 1970-73 → <strong>ARPANET</strong> interligou universidades e militares. Evoluiu até a Internet atual.</p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+      <div class="bg-indigo-900/30 rounded-lg p-3"><div class="text-lg mb-1">🏠</div><strong class="text-white">PAN</strong><br>Pessoal (Bluetooth)</div>
+      <div class="bg-indigo-900/30 rounded-lg p-3"><div class="text-lg mb-1">🏢</div><strong class="text-white">LAN</strong><br>Local (sala/empresa)</div>
+      <div class="bg-indigo-900/30 rounded-lg p-3"><div class="text-lg mb-1">🏙️</div><strong class="text-white">MAN</strong><br>Metropolitana (cidade)</div>
+      <div class="bg-indigo-900/30 rounded-lg p-3"><div class="text-lg mb-1">🌍</div><strong class="text-white">WAN</strong><br>Longa distância (Internet)</div>
+    </div>
+    <p class="text-xs text-indigo-400 italic">💡 PAN = bolso · LAN = escritório · MAN = cidade · WAN = mundo</p>
+  </div>
+</details>
+
+<!-- M2 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">🏗️</span>
+    <span class="flex-1">Módulo 2 — Topologias e Arquiteturas</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-3">
+    <p><strong class="text-indigo-300">Ponto a Ponto (P2P):</strong> Todos os PCs iguais, sem servidor. Barato e simples. Ideal para redes pequenas.</p>
+    <p><strong class="text-indigo-300">Cliente/Servidor:</strong> Servidor central gerencia tudo. Mais seguro, sem limite de máquinas, precisa de administrador.</p>
+    <div class="space-y-2">
+      <div class="flex items-center gap-3 bg-indigo-900/20 rounded-lg p-3">
+        <span>━━</span><div><strong class="text-white">Barramento:</strong> Todos num cabo só. Barato, mas se o cabo falha, tudo para.</div>
+      </div>
+      <div class="flex items-center gap-3 bg-indigo-900/20 rounded-lg p-3">
+        <span>⭕</span><div><strong class="text-white">Anel:</strong> Dados circulam em um sentido. Sem colisões, mas pouca tolerância a falhas.</div>
+      </div>
+      <div class="flex items-center gap-3 bg-indigo-900/20 rounded-lg p-3">
+        <span>⭐</span><div><strong class="text-white">Estrela (a mais usada!):</strong> Tudo conectado a um Switch central. Se um cabo falha, os demais funcionam.</div>
+      </div>
+    </div>
+    <p><strong class="text-indigo-300">Comunicação:</strong> <span class="tag bg-blue-600">Unicast</span> 1→1 · <span class="tag bg-purple-600">Multicast</span> 1→grupo · <span class="tag bg-pink-600">Broadcast</span> 1→todos</p>
+  </div>
+</details>
+
+<!-- M3 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">🔌</span>
+    <span class="flex-1">Módulo 3 — Equipamentos de Rede</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-2">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div class="bg-indigo-900/20 rounded-lg p-3"><strong class="text-red-300">📦 Hub</strong> <span class="text-xs text-red-400">(obsoleto)</span><br><span class="text-xs">Replica sinal para TODAS as portas. Causa colisões.</span></div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><strong class="text-green-300">🔌 Switch</strong> <span class="text-xs text-green-400">(o principal)</span><br><span class="text-xs">Envia dados SÓ para a porta de destino via tabela MAC.</span></div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><strong class="text-blue-300">🔀 Roteador</strong><br><span class="text-xs">Conecta redes diferentes. Escolhe a melhor rota para os pacotes.</span></div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><strong class="text-purple-300">📡 Access Point</strong><br><span class="text-xs">Fornece Wi-Fi. Recebe via cabo e distribui sem fio.</span></div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><strong class="text-orange-300">📞 Modem</strong><br><span class="text-xs">Converte digital↔analógico. Conecta ao provedor de Internet.</span></div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><strong class="text-yellow-300">🖥️ Servidor</strong><br><span class="text-xs">Fornece serviços: DHCP, DNS, arquivos, e-mail, web.</span></div>
+    </div>
+  </div>
+</details>
+
+<!-- M4 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">🔗</span>
+    <span class="flex-1">Módulo 4 — Cabeamento e Meios de Transmissão</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-3">
+    <p><strong class="text-indigo-300">Par Trançado (UTP/STP):</strong> O mais usado. Conector <strong>RJ-45</strong>. Máximo <strong>100 metros</strong>. UTP=sem blindagem, STP=com blindagem.</p>
+    <table class="w-full text-xs mt-2">
+      <thead><tr class="border-b border-indigo-800/40 text-indigo-400"><th class="text-left py-1 px-2">Cat</th><th class="text-left py-1 px-2">Velocidade</th><th class="text-left py-1 px-2">Uso</th></tr></thead>
+      <tbody>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2">Cat 5e</td><td>1 Gbps</td><td>Redes domésticas/corporativas</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2 text-white font-semibold">Cat 6</td><td>1-10 Gbps</td><td>Corporativo, melhor blindagem</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2">Cat 6a</td><td>10 Gbps</td><td>Data centers</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2">Cat 7</td><td>10-100 Gbps</td><td>Industrial</td></tr>
+        <tr><td class="py-1 px-2">Cat 8</td><td>25-40 Gbps</td><td>Data centers (máx 30m)</td></tr>
+      </tbody>
+    </table>
+    <p><strong class="text-indigo-300">Fibra Óptica:</strong> Usa <strong>luz</strong>. Altíssima velocidade, sem interferência. <em>Multimodo</em> (curta distância) e <em>Monomodo</em> (longa distância).</p>
+    <p><strong class="text-indigo-300">Interferências:</strong> EMI (eletromagnética), RFI (radiofrequência), Atenuação (perda por distância), Diafonia (cabos adjacentes).</p>
+  </div>
+</details>
+
+<!-- M5 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">📡</span>
+    <span class="flex-1">Módulo 5 — Wi-Fi e Redes Sem Fio</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-3">
+    <table class="w-full text-xs">
+      <thead><tr class="border-b border-indigo-800/40 text-indigo-400"><th class="text-left py-1 px-2">Padrão</th><th class="text-left py-1 px-2">Nome</th><th class="text-left py-1 px-2">Vel.</th><th class="text-left py-1 px-2">Freq.</th></tr></thead>
+      <tbody>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2">802.11b</td><td>—</td><td>11 Mbps</td><td>2.4 GHz</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2">802.11g</td><td>—</td><td>54 Mbps</td><td>2.4 GHz</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2">802.11n</td><td>Wi-Fi 4</td><td>600 Mbps</td><td>2.4/5 GHz</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2 text-white font-semibold">802.11ac</td><td class="text-white font-semibold">Wi-Fi 5</td><td>Gbps</td><td>5 GHz</td></tr>
+        <tr><td class="py-1 px-2 text-white font-semibold">802.11ax</td><td class="text-white font-semibold">Wi-Fi 6</td><td>Gbps</td><td>2.4/5 GHz</td></tr>
+      </tbody>
+    </table>
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="bg-blue-900/20 rounded-lg p-3"><strong class="text-white">2.4 GHz</strong><br>✓ Mais alcance ✓ Atravessa paredes<br>✗ Mais interferência</div>
+      <div class="bg-purple-900/20 rounded-lg p-3"><strong class="text-white">5 GHz</strong><br>✓ Mais velocidade ✓ Menos interferência<br>✗ Menor alcance</div>
+    </div>
+    <p><strong class="text-indigo-300">Segurança:</strong>
+      <span class="tag bg-red-700">WEP ✗</span>
+      <span class="tag bg-yellow-700">WPA ~</span>
+      <span class="tag bg-green-700">WPA2 ✓</span>
+      <span class="tag bg-blue-700">WPA3 ✓✓</span>
+    </p>
+  </div>
+</details>
+
+<!-- M6 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">🌍</span>
+    <span class="flex-1">Módulo 6 — Endereçamento IP</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div class="bg-indigo-900/20 rounded-lg p-3 text-center">
+        <strong class="text-indigo-300">IP (Lógico)</strong> — configurável, pode mudar
+        <div class="font-mono text-lg text-indigo-400 mt-1">192.168.1.10</div>
+        <div class="text-xs text-indigo-500">4 octetos · 0-255 cada · 32 bits</div>
+      </div>
+      <div class="bg-indigo-900/20 rounded-lg p-3 text-center">
+        <strong class="text-purple-300">MAC (Físico)</strong> — de fábrica, fixo
+        <div class="font-mono text-lg text-purple-400 mt-1">A4:5E:60:B3:7F:12</div>
+        <div class="text-xs text-indigo-500">6 bytes hexadecimal · 48 bits</div>
+      </div>
+    </div>
+    <table class="w-full text-xs">
+      <thead><tr class="border-b border-indigo-800/40 text-indigo-400"><th class="text-left py-1 px-2">Classe</th><th class="text-left py-1 px-2">Faixa</th><th class="text-left py-1 px-2">Máscara</th></tr></thead>
+      <tbody>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2 font-bold text-white">A</td><td>1-126</td><td class="font-mono">255.0.0.0</td></tr>
+        <tr class="border-b border-indigo-900/20"><td class="py-1 px-2 font-bold text-white">B</td><td>128-191</td><td class="font-mono">255.255.0.0</td></tr>
+        <tr><td class="py-1 px-2 font-bold text-white">C</td><td>192-223</td><td class="font-mono">255.255.255.0</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-yellow-300">⚠ <strong>127.0.0.1</strong> = loopback (testa a própria máquina, não sai para a rede)</p>
+    <p><strong class="text-indigo-300">DHCP:</strong> Atribui IPs automaticamente. Ao conectar na rede, o PC recebe IP sem configuração manual.</p>
+  </div>
+</details>
+
+<!-- M7 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">📜</span>
+    <span class="flex-1">Módulo 7 — Protocolos de Rede</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-1">
+    <p class="mb-2"><strong>Protocolos</strong> = regras que governam a comunicação entre dispositivos na rede.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-blue-600">IP</span> Identifica dispositivos com endereço único. Divide dados em pacotes.</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-green-600">TCP</span> Conexão confiável. Verifica se cada segmento foi recebido.</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-orange-600">UDP</span> Rápido, sem garantia. Usado em voz/vídeo em tempo real.</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-purple-600">DNS</span> Traduz nomes (google.com) → IPs. "Agenda da internet".</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-cyan-600">HTTP/S</span> Navegação web. HTTPS = com criptografia (cadeado).</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-teal-600">DHCP</span> Distribui IPs automaticamente na rede.</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-red-600">FTP</span> Transferência de arquivos entre computadores.</div>
+      <div class="bg-indigo-900/20 rounded-lg p-3"><span class="tag bg-pink-600">ARP</span> Mapeia IP → MAC. Localiza endereço físico via IP.</div>
+    </div>
+    <p class="mt-2 text-xs"><strong class="text-indigo-300">DNS populares:</strong>
+      <code class="text-green-400">8.8.8.8</code> Google ·
+      <code class="text-orange-400">1.1.1.1</code> Cloudflare ·
+      <code class="text-purple-400">9.9.9.9</code> Quad9
+    </p>
+  </div>
+</details>
+
+<!-- M8 -->
+<details class="card mb-3 group">
+  <summary class="cursor-pointer flex items-center gap-3 font-bold text-white text-sm list-none">
+    <span class="text-xl">⚙️</span>
+    <span class="flex-1">Módulo 8 — Configuração de Roteadores</span>
+    <svg class="w-4 h-4 text-indigo-400 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </summary>
+  <div class="mt-4 text-sm space-y-3">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+      <div class="bg-indigo-900/20 rounded-lg p-2 text-center"><strong class="text-white">Frequência</strong><br>2.4 ou 5 GHz</div>
+      <div class="bg-indigo-900/20 rounded-lg p-2 text-center"><strong class="text-white">Canal</strong><br>1-13 (2.4) / 36-165 (5)</div>
+      <div class="bg-indigo-900/20 rounded-lg p-2 text-center"><strong class="text-white">Largura</strong><br>20, 40, 80 MHz</div>
+      <div class="bg-indigo-900/20 rounded-lg p-2 text-center"><strong class="text-white">Cripto</strong><br>WPA2/WPA3</div>
+    </div>
+    <p class="text-xs"><strong class="text-indigo-300">Funções:</strong> WPS (PIN) · WDS (repetidor) · DHCP (IP automático) · DNS · QoS (prioridade) · Filtro MAC</p>
+    <div class="bg-green-900/20 border border-green-800/30 rounded-lg p-3 text-xs">
+      <strong class="text-green-300">🛡️ Dicas de Segurança — Prof. César:</strong>
+      <div class="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-1 text-green-200">
+        <span>✓ Ocultar SSID (nome da rede)</span>
+        <span>✓ Limitar IPs no DHCP</span>
+        <span>✓ Reservar IP para fixos</span>
+        <span>✓ Ativar Filtro de MAC</span>
+        <span>✓ Desabilitar WPS/QSS</span>
+        <span>✓ Habilitar proteção DoS</span>
+        <span>✓ Isolamento de AP</span>
+      </div>
+    </div>
+  </div>
+</details>
+
+</main>
+
+<!-- DIAGRAMA INTERATIVO -->
+<section class="sec pb-8">
+  <div class="card">
+    <h3 class="text-base font-bold text-white text-center mb-1">🌐 Diagrama de Rede</h3>
+    <p class="text-indigo-400 text-xs text-center mb-3">Clique nos equipamentos para saber mais</p>
+    <svg viewBox="0 0 600 340" class="w-full" style="max-width:550px;margin:0 auto;display:block">
+      <line x1="300" y1="50" x2="140" y2="150" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="5,5" opacity=".4"/>
+      <line x1="300" y1="50" x2="300" y2="150" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="5,5" opacity=".4"/>
+      <line x1="300" y1="50" x2="460" y2="150" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="5,5" opacity=".4"/>
+      <line x1="140" y1="150" x2="100" y2="270" stroke="#6366f1" stroke-width="1.5" opacity=".3"/>
+      <line x1="140" y1="150" x2="200" y2="270" stroke="#6366f1" stroke-width="1.5" opacity=".3"/>
+      <line x1="300" y1="150" x2="300" y2="270" stroke="#6366f1" stroke-width="1.5" opacity=".3"/>
+      <line x1="460" y1="150" x2="420" y2="270" stroke="#6366f1" stroke-width="1.5" opacity=".3"/>
+      <line x1="460" y1="150" x2="500" y2="270" stroke="#6366f1" stroke-width="1.5" opacity=".3"/>
+      <g class="net-node" onclick="nInfo('☁ Internet','WAN global. Dados chegam via modem/roteador do provedor.')">
+        <ellipse cx="300" cy="40" rx="60" ry="22" fill="#312e81" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="300" y="44" text-anchor="middle" fill="white" font-size="12" font-weight="bold">☁ Internet</text>
+      </g>
+      <g class="net-node" onclick="nInfo('🔀 Roteador','Conecta LAN↔WAN. Escolhe melhor rota. Gateway: 192.168.1.1')">
+        <rect x="255" y="130" width="90" height="42" rx="8" fill="#312e81" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="300" y="153" text-anchor="middle" fill="#c7d2fe" font-size="11">🔀 Roteador</text>
+        <text x="300" y="166" text-anchor="middle" fill="#6366f1" font-size="8">192.168.1.1</text>
+      </g>
+      <g class="net-node" onclick="nInfo('🔌 Switch','Envia dados só para a porta de destino via tabela MAC.')">
+        <rect x="95" y="130" width="90" height="42" rx="8" fill="#312e81" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="140" y="155" text-anchor="middle" fill="#c7d2fe" font-size="11">🔌 Switch</text>
+      </g>
+      <g class="net-node" onclick="nInfo('📡 Wi-Fi AP','Distribui sinal sem fio. Opera em 2.4/5 GHz.')">
+        <rect x="415" y="130" width="90" height="42" rx="8" fill="#312e81" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="460" y="155" text-anchor="middle" fill="#c7d2fe" font-size="11">📡 Wi-Fi</text>
+      </g>
+      <g class="net-node" onclick="nInfo('💻 PC','Conectado via cabo UTP/RJ-45. IP via DHCP.')">
+        <rect x="65" y="255" width="70" height="35" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+        <text x="100" y="276" text-anchor="middle" fill="#a5b4fc" font-size="10">💻 PC</text>
+      </g>
+      <g class="net-node" onclick="nInfo('💻 PC 2','Outra estação de trabalho na rede local.')">
+        <rect x="165" y="255" width="70" height="35" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+        <text x="200" y="276" text-anchor="middle" fill="#a5b4fc" font-size="10">💻 PC 2</text>
+      </g>
+      <g class="net-node" onclick="nInfo('🖥 Servidor','Fornece serviços: DHCP, DNS, arquivos. IP fixo.')">
+        <rect x="265" y="255" width="70" height="35" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+        <text x="300" y="276" text-anchor="middle" fill="#a5b4fc" font-size="10">🖥 Servidor</text>
+      </g>
+      <g class="net-node" onclick="nInfo('📱 Celular','Conectado via Wi-Fi. IP automático via DHCP.')">
+        <rect x="385" y="255" width="70" height="35" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+        <text x="420" y="276" text-anchor="middle" fill="#a5b4fc" font-size="10">📱 Cel</text>
+      </g>
+      <g class="net-node" onclick="nInfo('💻 Notebook','Conectado sem fio ao Access Point.')">
+        <rect x="465" y="255" width="70" height="35" rx="6" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1"/>
+        <text x="500" y="276" text-anchor="middle" fill="#a5b4fc" font-size="10">💻 Note</text>
+      </g>
+    </svg>
+    <div id="nbox" class="hidden mt-3 bg-indigo-900/40 border border-indigo-700/40 rounded-lg p-3 text-xs text-indigo-200"></div>
+  </div>
+</section>
+
+<!-- COMANDOS -->
+<section class="sec pb-8">
+  <div class="card">
+    <h3 class="text-base font-bold text-white text-center mb-3">⌨️ Comandos de Rede — Windows</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="cmds"></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="sec pb-8">
+  <div class="card">
+    <h3 class="text-base font-bold text-white text-center mb-1">🧠 Quiz — Teste seus Conhecimentos</h3>
+    <p class="text-indigo-400 text-xs text-center mb-4">10 perguntas para fixar o aprendizado</p>
+    <div id="qbox"></div>
+    <div id="qres" class="hidden text-center mt-4 p-4 bg-indigo-900/30 rounded-xl">
+      <div class="text-3xl mb-1" id="qemo"></div>
+      <div class="text-lg font-bold text-white" id="qsco"></div>
+      <p class="text-indigo-300 text-xs mt-1" id="qmsg"></p>
+      <button onclick="qReset()" class="mt-3 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-1.5 rounded-lg text-xs transition">Tentar Novamente</button>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSÁRIO -->
+<section id="glos" class="sec pb-8">
+  <h2 class="text-lg font-bold text-center mb-3 text-white">📖 Glossário</h2>
+  <input type="text" id="gsearch" oninput="gFilter()" placeholder="🔍 Buscar termo..." class="w-full bg-[#1a1744] border border-indigo-800/40 rounded-xl px-4 py-2.5 text-white placeholder-indigo-500 focus:outline-none focus:border-indigo-500 text-sm mb-3">
+  <div id="glist" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-6 text-center border-t border-indigo-900/40 no-print">
+  <p class="text-indigo-400 text-xs"><strong class="text-indigo-300">Operador de Computador e Redes Locais</strong> — Instrutor César</p>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="btt" onclick="scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-5 right-5 w-10 h-10 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg flex items-center justify-center transition opacity-0 pointer-events-none z-50 no-print text-sm">↑</button>
+
+<script>
+// DATA
+const Q=[
+  {q:"O que é uma rede de computadores?",o:["Um PC conectado à tomada","Dispositivos interligados compartilhando dados","Um programa de edição","Um sistema operacional"],c:1},
+  {q:"Qual rede cobre uma casa ou escritório?",o:["WAN","MAN","LAN","PAN"],c:2},
+  {q:"Qual equipamento envia dados SÓ para a porta de destino?",o:["Hub","Modem","Switch","Repetidor"],c:2},
+  {q:"Qual conector é usado em cabos par trançado?",o:["BNC","RJ-11","RJ-45","USB-C"],c:2},
+  {q:"Qual protocolo traduz nomes de domínio em IPs?",o:["FTP","DNS","DHCP","TCP"],c:1},
+  {q:"Qual segurança Wi-Fi NÃO deve ser usada?",o:["WPA2","WPA3","WEP","WPA"],c:2},
+  {q:"Qual é o endereço de loopback?",o:["192.168.1.1","10.0.0.1","127.0.0.1","255.255.255.0"],c:2},
+  {q:"Topologia mais usada atualmente?",o:["Barramento","Anel","Estrela","Grafo"],c:2},
+  {q:"A frequência 5 GHz tem:",o:["Maior alcance","Mais interferência","Maior velocidade e menor alcance","Mesmos canais que 2.4"],c:2},
+  {q:"Comando que mostra config de rede no Windows?",o:["ping","tracert","ipconfig","netstat"],c:2}
+];
+const cmds=[
+  {c:"ipconfig",d:"Mostra config de rede",e:"ipconfig /all → detalhes"},
+  {c:"ping",d:"Testa conectividade",e:"ping google.com"},
+  {c:"tracert",d:"Traça rota até destino",e:"tracert google.com"},
+  {c:"ipconfig /release",d:"Libera IP",e:"/renew → renova"},
+  {c:"arp -a",d:"Tabela ARP (IP↔MAC)",e:"Mapeamento IP/MAC"},
+  {c:"netstat -a",d:"Conexões ativas",e:"-b → mostra programa"},
+  {c:"nslookup",d:"Consulta DNS",e:"nslookup google.com"},
+  {c:"getmac",d:"Mostra MAC",e:"Lista interfaces"},
+  {c:"hostname",d:"Nome do PC na rede",e:""},
+  {c:"systeminfo",d:"Info completa do sistema",e:"S.O., memória, rede"},
+  {c:"route print",d:"Tabela de rotas",e:"= netstat -r"},
+  {c:"net use",d:"Recursos compartilhados",e:"net statistics"}
+];
+const G=[
+  {t:"LAN",d:"Rede Local — sala, casa, empresa"},
+  {t:"WAN",d:"Rede de Longa Distância (ex: Internet)"},
+  {t:"IP",d:"Endereço lógico que identifica dispositivo na rede"},
+  {t:"MAC",d:"Endereço físico gravado de fábrica na placa de rede"},
+  {t:"TCP",d:"Protocolo de transporte confiável"},
+  {t:"UDP",d:"Protocolo rápido, sem garantia de entrega"},
+  {t:"DNS",d:"Traduz nomes de domínio → endereços IP"},
+  {t:"DHCP",d:"Atribui IPs automaticamente na rede"},
+  {t:"HTTP/S",d:"Protocolo de navegação web (S = seguro)"},
+  {t:"FTP",d:"Transferência de arquivos na rede"},
+  {t:"Switch",d:"Encaminha dados só para a porta destino"},
+  {t:"Hub",d:"Replica sinal para TODAS as portas (obsoleto)"},
+  {t:"Roteador",d:"Escolhe melhor rota entre redes diferentes"},
+  {t:"Access Point",d:"Ponto de acesso Wi-Fi sem fio"},
+  {t:"UTP/STP",d:"Cabo par trançado sem/com blindagem"},
+  {t:"RJ-45",d:"Conector padrão para cabos Ethernet"},
+  {t:"SSID",d:"Nome da rede Wi-Fi"},
+  {t:"ARP",d:"Associa endereço IP ao endereço MAC"},
+  {t:"Broadcast",d:"Envio de dados para todos da rede"},
+  {t:"Topologia",d:"Forma como dispositivos estão conectados"},
+  {t:"Fibra Óptica",d:"Transmissão por luz — altíssima velocidade"},
+  {t:"VPN",d:"Conexão segura entre redes separadas"},
+  {t:"QoS",d:"Controle de prioridade de tráfego"},
+  {t:"WPA2/3",d:"Protocolos de segurança Wi-Fi"},
+  {t:"Loopback",d:"127.0.0.1 — testa a própria máquina"},
+  {t:"Máscara",d:"Define qual parte do IP é rede e qual é host"}
+];
+
+// QUIZ
+let qi=0,qs=0,qa=new Set();
+function qRender(){
+  const b=document.getElementById('qbox'),q=Q[qi];
+  if(!q)return;
+  b.innerHTML=`
+    <div class="flex justify-between text-xs text-indigo-400 mb-2"><span>Pergunta ${qi+1}/${Q.length}</span><span>Acertos: ${qs}</span></div>
+    <div class="h-1 bg-indigo-950 rounded-full mb-4"><div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all" style="width:${qi/Q.length*100}%"></div></div>
+    <p class="text-white font-semibold text-sm mb-3">${q.q}</p>
+    <div class="space-y-2">${q.o.map((o,i)=>`
+      <button onclick="qAns(${i})" id="qo${i}" class="quiz-opt w-full text-left p-2.5 rounded-lg border border-indigo-800/30 bg-indigo-900/20 text-xs text-indigo-200 hover:text-white ${qa.has(qi)?'pointer-events-none':''} ${qa.has(qi)&&i===q.c?'ok':''}">
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-800/50 text-xs text-indigo-300 mr-2 font-bold">${'ABCD'[i]}</span>${o}
+      </button>`).join('')}</div>
+    ${qa.has(qi)?`<div class="mt-3 flex justify-end"><button onclick="qNext()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs transition">${qi<Q.length-1?'Próxima →':'Ver Resultado'}</button></div>`:''}`;
+}
+function qAns(i){
+  if(qa.has(qi))return;qa.add(qi);
+  const q=Q[qi];
+  if(i===q.c){document.getElementById('qo'+i).classList.add('ok');qs++}
+  else{document.getElementById('qo'+i).classList.add('err');document.getElementById('qo'+q.c).classList.add('ok')}
+  qRender();
+}
+function qNext(){
+  qi++;
+  if(qi>=Q.length){
+    document.getElementById('qbox').innerHTML='';
+    const r=document.getElementById('qres');r.classList.remove('hidden');
+    const p=Math.round(qs/Q.length*100);
+    document.getElementById('qsco').textContent=`${qs} de ${Q.length} (${p}%)`;
+    document.getElementById('qemo').textContent=p>=80?'🏆':p>=60?'👍':'📚';
+    document.getElementById('qmsg').textContent=p>=80?'Excelente! Você domina redes!':p>=60?'Bom! Revise para melhorar.':'Continue estudando e tente novamente.';
+  }else qRender();
+}
+function qReset(){qi=0;qs=0;qa=new Set();document.getElementById('qres').classList.add('hidden');qRender()}
+
+// COMMANDS
+document.getElementById('cmds').innerHTML=cmds.map(c=>`
+  <div class="bg-indigo-950/50 rounded-lg p-2.5 border border-indigo-800/20">
+    <code class="text-indigo-300 font-bold text-xs">${c.c}</code>
+    <span class="text-xs text-indigo-200 ml-1">${c.d}</span>
+    ${c.e?`<div class="text-xs text-indigo-500 mt-0.5 italic">${c.e}</div>`:''}
+  </div>`).join('');
+
+// GLOSSARY
+function gRender(){
+  document.getElementById('glist').innerHTML=G.map(g=>`
+    <div class="gi bg-[#1a1744] border border-indigo-900/40 rounded-lg p-3">
+      <strong class="text-indigo-300 text-xs">${g.t}</strong>
+      <span class="text-xs text-indigo-200 ml-1">${g.d}</span>
+    </div>`).join('');
+}
+function gFilter(){
+  const s=document.getElementById('gsearch').value.toLowerCase();
+  document.querySelectorAll('.gi').forEach(e=>{e.style.display=e.textContent.toLowerCase().includes(s)?'':'none'});
+}
+
+// NETWORK DIAGRAM
+function nInfo(t,d){
+  const b=document.getElementById('nbox');b.classList.remove('hidden');
+  b.innerHTML=`<strong class="text-white">${t}</strong> — ${d}`;
+}
+
+// PROGRESS (modules read via details open)
+function updateP(){
+  const all=document.querySelectorAll('details.card');
+  let opened=0;all.forEach(d=>{if(d.open)opened++});
+  const pct=Math.round(opened/all.length*100);
+  document.getElementById('pbar').style.width=pct+'%';
+}
+document.querySelectorAll('details.card').forEach(d=>d.addEventListener('toggle',updateP));
+
+// BACK TO TOP
+addEventListener('scroll',()=>{const b=document.getElementById('btt');b.style.opacity=scrollY>400?'1':'0';b.style.pointerEvents=scrollY>400?'auto':'none'});
+
+// INIT
+gRender();qRender();updateP();
+</script>
+</body>
+</html>

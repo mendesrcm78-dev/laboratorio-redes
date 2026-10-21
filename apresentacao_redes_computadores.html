@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso de Redes de Computadores - Painel Interativo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+  body { background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%); color: #2c3e50; overflow-x: hidden; }
+
+  header {
+    background: linear-gradient(135deg, #1976D2 0%, #00ACC1 100%);
+    color: white; padding: 25px 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 28px; display: flex; align-items: center; gap: 15px; }
+  header p { opacity: 0.95; margin-top: 5px; }
+  .logo-icon {
+    background: white; color: #1976D2; width: 50px; height: 50px;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: bold;
+  }
+
+  .container { display: flex; min-height: calc(100vh - 100px); }
+
+  .sidebar {
+    width: 320px; background: white; border-right: 3px solid #1976D2;
+    overflow-y: auto; max-height: calc(100vh - 100px); position: sticky; top: 100px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+  }
+  .sidebar h2 { padding: 20px; background: #E3F2FD; color: #1976D2; font-size: 16px; border-bottom: 2px solid #BBDEFB; }
+  .module { border-bottom: 1px solid #eee; transition: all 0.3s; }
+  .module-header {
+    padding: 15px 20px; background: #fafafa; font-weight: bold; color: #1976D2;
+    display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+  }
+  .module-header:hover { background: #E3F2FD; }
+  .module-header .arrow { transition: transform 0.3s; }
+  .module.open .module-header .arrow { transform: rotate(90deg); }
+  .lessons { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
+  .module.open .lessons { max-height: 1000px; }
+  .lesson {
+    padding: 12px 20px 12px 40px; cursor: pointer; transition: all 0.2s;
+    border-left: 4px solid transparent; font-size: 14px;
+  }
+  .lesson:hover { background: #E3F2FD; border-left-color: #00ACC1; }
+  .lesson.active { background: #BBDEFB; border-left-color: #1976D2; font-weight: bold; }
+
+  .main { flex: 1; padding: 40px; max-width: calc(100% - 320px); }
+  .slide {
+    background: white; border-radius: 20px; padding: 40px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08); animation: fadeIn 0.5s;
+    margin-bottom: 20px;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .slide-header { border-left: 6px solid #1976D2; padding-left: 20px; margin-bottom: 30px; }
+  .slide-tag {
+    display: inline-block; background: #1976D2; color: white;
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px;
+  }
+  .slide h2 { font-size: 32px; color: #2c3e50; margin-bottom: 8px; }
+  .slide-subtitle { color: #7f8c8d; font-size: 16px; }
+  .slide h3 { color: #1976D2; margin: 25px 0 15px; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+  .slide h3::before { content: "▸"; color: #00ACC1; }
+  .slide p { line-height: 1.7; margin: 10px 0; color: #34495e; font-size: 16px; }
+  .slide ul { margin: 15px 0; padding-left: 30px; }
+  .slide ul li { margin: 8px 0; line-height: 1.6; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin: 20px 0; }
+  .card {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+    padding: 20px; border-radius: 12px; border-left: 5px solid #1976D2;
+    transition: transform 0.3s;
+  }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(25,118,210,0.15); }
+  .card h4 { color: #1976D2; margin-bottom: 10px; font-size: 18px; }
+  .card p { font-size: 14px; color: #555; }
+
+  .info-box {
+    background: linear-gradient(135deg, #E1F5FE 0%, #B3E5FC 100%);
+    padding: 20px; border-radius: 12px; border-left: 5px solid #0288D1; margin: 20px 0;
+  }
+  .info-box h4 { color: #01579B; margin-bottom: 10px; }
+
+  .warning-box {
+    background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+    padding: 20px; border-radius: 12px; border-left: 5px solid #F57C00; margin: 20px 0;
+  }
+  .warning-box h4 { color: #E65100; margin-bottom: 10px; }
+
+  .success-box {
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    padding: 20px; border-radius: 12px; border-left: 5px solid #388E3C; margin: 20px 0;
+  }
+  .success-box h4 { color: #2E7D32; margin-bottom: 10px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+  th { background: #1976D2; color: white; padding: 15px; text-align: left; }
+  td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: #F5F9FF; }
+  tr:hover td { background: #BBDEFB; }
+
+  .diagram { background: #FAFAFA; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; }
+
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
+  .btn {
+    padding: 12px 25px; background: #1976D2; color: white; border: none;
+    border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 14px;
+    transition: all 0.3s; box-shadow: 0 4px 10px rgba(25,118,210,0.3);
+  }
+  .btn:hover { background: #1565C0; transform: translateY(-2px); }
+  .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .quiz {
+    background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+    padding: 25px; border-radius: 15px; margin: 25px 0; border-left: 5px solid #8E24AA;
+  }
+  .quiz h4 { color: #6A1B9A; margin-bottom: 15px; }
+  .quiz-option {
+    background: white; padding: 12px 18px; margin: 8px 0; border-radius: 8px;
+    cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+  }
+  .quiz-option:hover { border-color: #8E24AA; transform: translateX(5px); }
+  .quiz-option.correct { background: #C8E6C9; border-color: #388E3C; }
+  .quiz-option.wrong { background: #FFCDD2; border-color: #D32F2F; }
+
+  .progress-bar { background: #BBDEFB; height: 6px; border-radius: 3px; margin: 20px 0; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, #1976D2, #00ACC1); height: 100%; transition: width 0.5s; }
+
+  .code {
+    background: #263238; color: #AED581; padding: 15px 20px;
+    border-radius: 8px; font-family: 'Courier New', monospace;
+    margin: 15px 0; overflow-x: auto;
+  }
+
+  @media (max-width: 768px) {
+    .container { flex-direction: column; }
+    .sidebar { width: 100%; position: static; max-height: 300px; }
+    .main { max-width: 100%; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="logo-icon">🌐</span> Curso de Redes de Computadores</h1>
+  <p>Painel Interativo de Aulas — Turma Iniciante | 80h</p>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h2>📚 NAVEGAÇÃO DO CURSO</h2>
+    <div id="menu"></div>
+  </aside>
+  <main class="main" id="content"></main>
+</div>
+
+<script>
+const curso = {
+  titulo: "Curso de Redes de Computadores",
+  modulos: [
+    {
+      nome: "MÓDULO I — Introdução às Redes",
+      aulas: [
+        {
+          titulo: "Aula 1 — Apresentação e Fundamentos",
+          tag: "Introdução",
+          conteudo: `
+            <h3>O Que é uma Rede de Computadores?</h3>
+            <p>Uma <strong>rede de computadores</strong> é um conjunto de dois ou mais dispositivos (computadores, celulares, impressoras, servidores) interligados entre si com o objetivo de <strong>compartilhar recursos e trocar informações</strong>.</p>
+
+            <div class="info-box">
+              <h4>💡 Exemplos do Dia a Dia</h4>
+              <p>• Quando você conecta o celular no Wi-Fi de casa = está em uma rede!<br>
+              • Acessar o Google = sua rede falando com a rede do Google<br>
+              • Enviar mensagem no WhatsApp = dados viajando entre várias redes<br>
+              • Usar caixa eletrônico = rede bancária privada</p>
+            </div>
+
+            <h3>História e Evolução das Redes</h3>
+            <table>
+              <tr><th>Ano</th><th>Marco Histórico</th></tr>
+              <tr><td>1969</td><td>ARPANET — primeira rede de computadores (4 nós)</td></tr>
+              <tr><td>1973</td><td>Vinton Cerf desenvolve o protocolo TCP</td></tr>
+              <tr><td>1983</td><td>TCP/IP se torna padrão da ARPANET</td></tr>
+              <tr><td>1989</td><td>Tim Berners-Lee inventa a World Wide Web</td></tr>
+              <tr><td>1995</td><td>Internet comercial chega ao Brasil</td></tr>
+              <tr><td>2007</td><td>iPhone — popularização da internet móvel</td></tr>
+              <tr><td>2020+</td><td>5G, IoT, Cloud Computing</td></tr>
+            </table>
+
+            <h3>Por Que Usar Redes?</h3>
+            <div class="cards">
+              <div class="card"><h4>📁 Compartilhar Arquivos</h4><p>Vários usuários acessam os mesmos documentos.</p></div>
+              <div class="card"><h4>🖨️ Compartilhar Recursos</h4><p>Uma única impressora atende todo o escritório.</p></div>
+              <div class="card"><h4>💬 Comunicação</h4><p>E-mail, chat, videochamada, redes sociais.</p></div>
+              <div class="card"><h4>🌐 Acesso à Internet</h4><p>Conexão com milhões de outras redes globalmente.</p></div>
+              <div class="card"><h4>💰 Redução de Custos</h4><p>Recursos centralizados economizam dinheiro.</p></div>
+              <div class="card"><h4>🔒 Segurança Centralizada</h4><p>Backup, antivírus e controle de acesso unificados.</p></div>
+            </div>
+
+            <h3>Vantagens x Desvantagens</h3>
+            <table>
+              <tr><th>✅ Vantagens</th><th>❌ Desvantagens</th></tr>
+              <tr><td>Compartilhamento de recursos</td><td>Custo inicial de implantação</td></tr>
+              <tr><td>Comunicação rápida</td><td>Necessidade de manutenção</td></tr>
+              <tr><td>Centralização de dados</td><td>Riscos de segurança (invasões)</td></tr>
+              <tr><td>Escalabilidade</td><td>Dependência da rede (se cair, tudo para)</td></tr>
+              <tr><td>Acesso remoto</td><td>Requer conhecimento técnico</td></tr>
+            </table>
+
+            <h3>Mercado de Trabalho 💼</h3>
+            <div class="success-box">
+              <h4>Oportunidades Profissionais</h4>
+              <p>• <strong>Técnico de suporte</strong> — primeiro emprego comum<br>
+              • <strong>Analista de redes</strong> — configuração e manutenção<br>
+              • <strong>Administrador de redes</strong> — gestão de servidores<br>
+              • <strong>Especialista em segurança</strong> — cybersecurity<br>
+              • <strong>Engenheiro de redes</strong> — projetos complexos<br>
+              • <strong>Arquiteto de soluções cloud</strong> (AWS, Azure, GCP)</p>
+              <p style="margin-top:10px;">📈 Setor com <strong>demanda crescente</strong> em todas as áreas!</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual o principal objetivo de uma rede de computadores?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Aumentar a velocidade do processador</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Compartilhar recursos e informações entre dispositivos</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Diminuir o consumo de energia</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 2 — Classificação das Redes",
+          tag: "Classificação",
+          conteudo: `
+            <h3>Como Classificamos as Redes?</h3>
+            <p>As redes podem ser classificadas de várias formas. As mais importantes são por <strong>abrangência (tamanho)</strong> e por <strong>arquitetura</strong>.</p>
+
+            <h3>Classificação por Abrangência</h3>
+            <div class="cards">
+              <div class="card"><h4>📱 PAN</h4><p><strong>Personal Area Network</strong><br>Alguns metros. Ex: Bluetooth do fone com celular.</p></div>
+              <div class="card"><h4>🏠 LAN</h4><p><strong>Local Area Network</strong><br>Casa, escritório, prédio. A mais comum!</p></div>
+              <div class="card"><h4>🏙️ MAN</h4><p><strong>Metropolitan Area Network</strong><br>Cobre uma cidade inteira.</p></div>
+              <div class="card"><h4>🌍 WAN</h4><p><strong>Wide Area Network</strong><br>Cobre países, continentes. A internet é a maior WAN!</p></div>
+              <div class="card"><h4>☁️ CAN</h4><p><strong>Campus Area Network</strong><br>Universidades, empresas grandes (várias LANs interligadas).</p></div>
+              <div class="card"><h4>💾 SAN</h4><p><strong>Storage Area Network</strong><br>Rede dedicada para armazenamento.</p></div>
+            </div>
+
+            <h3>Comparativo de Abrangência</h3>
+            <table>
+              <tr><th>Tipo</th><th>Alcance</th><th>Exemplo</th></tr>
+              <tr><td>PAN</td><td>1 a 10 metros</td><td>Bluetooth, AirDrop</td></tr>
+              <tr><td>LAN</td><td>10 metros a 1 km</td><td>Rede doméstica, escritório</td></tr>
+              <tr><td>CAN</td><td>1 a 5 km</td><td>Campus universitário</td></tr>
+              <tr><td>MAN</td><td>5 a 50 km</td><td>Rede de uma cidade</td></tr>
+              <tr><td>WAN</td><td>Acima de 50 km</td><td>Internet global</td></tr>
+            </table>
+
+            <h3>Classificação por Arquitetura</h3>
+
+            <h3>🖥️ Cliente-Servidor</h3>
+            <div class="info-box">
+              <h4>Como Funciona?</h4>
+              <p>Existe um <strong>computador central (servidor)</strong> que oferece serviços a outros computadores (clientes).</p>
+              <p><strong>Exemplos:</strong> Acessar um site (o site = servidor; seu navegador = cliente), e-mail, rede de empresa.</p>
+              <p>✅ <strong>Vantagens:</strong> Centralizado, seguro, escalável<br>
+              ❌ <strong>Desvantagens:</strong> Se o servidor cair, todos param</p>
+            </div>
+
+            <h3>🔄 Ponto a Ponto (P2P)</h3>
+            <div class="info-box">
+              <h4>Como Funciona?</h4>
+              <p>Todos os computadores são <strong>iguais</strong> — cada um pode ser cliente E servidor ao mesmo tempo.</p>
+              <p><strong>Exemplos:</strong> BitTorrent, redes domésticas pequenas, blockchain.</p>
+              <p>✅ <strong>Vantagens:</strong> Baixo custo, descentralizado<br>
+              ❌ <strong>Desvantagens:</strong> Menos seguro, difícil gerenciar muitos nós</p>
+            </div>
+
+            <h3>Cabeadas vs Sem Fio</h3>
+            <div class="cards">
+              <div class="card"><h4>🔌 Cabeada</h4><p><strong>Mais rápida e estável</strong>. Usa cabos UTP, fibra. Exigida em empresas.</p></div>
+              <div class="card"><h4>📡 Sem Fio (Wireless)</h4><p><strong>Mais prática</strong>. Wi-Fi, Bluetooth. Permite mobilidade.</p></div>
+              <div class="card"><h4>🔀 Híbrida</h4><p><strong>Combinação dos dois</strong>. Modelo mais usado atualmente.</p></div>
+            </div>
+
+            <h3>Internet, Intranet e Extranet</h3>
+            <table>
+              <tr><th>Tipo</th><th>Definição</th><th>Quem Acessa</th></tr>
+              <tr><td><strong>Internet</strong></td><td>Rede mundial pública</td><td>Qualquer pessoa no mundo</td></tr>
+              <tr><td><strong>Intranet</strong></td><td>Rede interna privada (mesma tecnologia)</td><td>Apenas funcionários da empresa</td></tr>
+              <tr><td><strong>Extranet</strong></td><td>Extensão da intranet para parceiros externos</td><td>Funcionários + clientes/fornecedores autorizados</td></tr>
+            </table>
+
+            <div class="success-box">
+              <h4>💡 Exemplo Real</h4>
+              <p>• <strong>Internet:</strong> Você acessa o Google de casa<br>
+              • <strong>Intranet:</strong> Funcionário de banco acessa sistema interno só pelo computador da agência<br>
+              • <strong>Extranet:</strong> Fornecedor consulta estoque da empresa pela web, com login</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Uma rede em um escritório com 20 computadores e 1 impressora é classificada como:</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">WAN</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">LAN</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">PAN</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 3 — Topologias de Rede",
+          tag: "Topologias",
+          conteudo: `
+            <h3>O Que é Topologia?</h3>
+            <p>É a <strong>forma como os dispositivos de uma rede estão conectados</strong>. Existem dois tipos:</p>
+            <div class="cards">
+              <div class="card"><h4>📐 Topologia Física</h4><p>Como os cabos e equipamentos estão dispostos no espaço.</p></div>
+              <div class="card"><h4>🔄 Topologia Lógica</h4><p>Como os dados realmente fluem (independente do desenho físico).</p></div>
+            </div>
+
+            <h3>Topologia em Barramento (Bus)</h3>
+            <div class="diagram">
+              <svg width="100%" height="160" viewBox="0 0 600 160">
+                <line x1="50" y1="80" x2="550" y2="80" stroke="#1976D2" stroke-width="4"/>
+                <circle cx="150" cy="80" r="6" fill="#FF6B35"/>
+                <line x1="150" y1="80" x2="150" y2="40" stroke="#666" stroke-width="2"/>
+                <rect x="130" y="20" width="40" height="25" fill="#388E3C" rx="3"/>
+                <circle cx="250" cy="80" r="6" fill="#FF6B35"/>
+                <line x1="250" y1="80" x2="250" y2="40" stroke="#666" stroke-width="2"/>
+                <rect x="230" y="20" width="40" height="25" fill="#388E3C" rx="3"/>
+                <circle cx="350" cy="80" r="6" fill="#FF6B35"/>
+                <line x1="350" y1="80" x2="350" y2="120" stroke="#666" stroke-width="2"/>
+                <rect x="330" y="120" width="40" height="25" fill="#388E3C" rx="3"/>
+                <circle cx="450" cy="80" r="6" fill="#FF6B35"/>
+                <line x1="450" y1="80" x2="450" y2="120" stroke="#666" stroke-width="2"/>
+                <rect x="430" y="120" width="40" height="25" fill="#388E3C" rx="3"/>
+                <text x="300" y="155" text-anchor="middle" font-size="13" fill="#333" font-weight="bold">Barramento — todos conectados a um cabo único</text>
+              </svg>
+            </div>
+            <div class="info-box">
+              <h4>Características</h4>
+              <p>✅ Simples e barata<br>❌ Se o cabo principal quebrar, toda a rede para<br>❌ Em desuso atualmente</p>
+            </div>
+
+            <h3>Topologia em Anel (Ring)</h3>
+            <div class="diagram">
+              <svg width="100%" height="200" viewBox="0 0 600 200">
+                <circle cx="300" cy="100" r="70" fill="none" stroke="#1976D2" stroke-width="3"/>
+                <rect x="280" y="10" width="40" height="25" fill="#388E3C" rx="3"/>
+                <rect x="380" y="80" width="40" height="25" fill="#388E3C" rx="3"/>
+                <rect x="280" y="165" width="40" height="25" fill="#388E3C" rx="3"/>
+                <rect x="180" y="80" width="40" height="25" fill="#388E3C" rx="3"/>
+                <text x="300" y="195" text-anchor="middle" font-size="13" fill="#333" font-weight="bold">Anel — dados circulam em uma única direção</text>
+              </svg>
+            </div>
+            <div class="info-box">
+              <h4>Características</h4>
+              <p>✅ Bom desempenho com tráfego controlado<br>❌ Falha em um nó pode afetar toda a rede<br>📌 Usada em algumas redes industriais</p>
+            </div>
+
+            <h3>Topologia em Estrela (Star) ⭐</h3>
+            <div class="diagram">
+              <svg width="100%" height="220" viewBox="0 0 600 220">
+                <rect x="270" y="80" width="60" height="40" fill="#1976D2" rx="5"/>
+                <text x="300" y="105" text-anchor="middle" font-size="12" fill="white" font-weight="bold">SWITCH</text>
+                <line x1="300" y1="80" x2="200" y2="30" stroke="#666" stroke-width="2"/>
+                <line x1="300" y1="80" x2="400" y2="30" stroke="#666" stroke-width="2"/>
+                <line x1="270" y1="100" x2="150" y2="100" stroke="#666" stroke-width="2"/>
+                <line x1="330" y1="100" x2="450" y2="100" stroke="#666" stroke-width="2"/>
+                <line x1="300" y1="120" x2="200" y2="180" stroke="#666" stroke-width="2"/>
+                <line x1="300" y1="120" x2="400" y2="180" stroke="#666" stroke-width="2"/>
+                <rect x="170" y="10" width="60" height="25" fill="#388E3C" rx="3"/>
+                <rect x="370" y="10" width="60" height="25" fill="#388E3C" rx="3"/>
+                <rect x="90" y="87" width="60" height="25" fill="#388E3C" rx="3"/>
+                <rect x="450" y="87" width="60" height="25" fill="#388E3C" rx="3"/>
+                <rect x="170" y="180" width="60" height="25" fill="#388E3C" rx="3"/>
+                <rect x="370" y="180" width="60" height="25" fill="#388E3C" rx="3"/>
+                <text x="300" y="215" text-anchor="middle" font-size="13" fill="#333" font-weight="bold">Estrela — todos conectados a um switch central (MAIS USADA HOJE)</text>
+              </svg>
+            </div>
+            <div class="success-box">
+              <h4>⭐ A Mais Usada Atualmente!</h4>
+              <p>✅ Falha em um cabo não afeta os outros<br>
+              ✅ Fácil de instalar e expandir<br>
+              ✅ Manutenção simples<br>
+              ❌ Se o switch central falhar, toda a rede cai<br>
+              📌 Padrão em residências e empresas</p>
+            </div>
+
+            <h3>Topologia em Malha (Mesh)</h3>
+            <div class="info-box">
+              <h4>Características</h4>
+              <p>Todos os dispositivos se conectam diretamente com todos os outros.</p>
+              <p>✅ <strong>Alta redundância</strong> — se um caminho falhar, há outros<br>
+              ❌ Muito caro e complexo<br>
+              📌 Usada na internet (roteadores) e Wi-Fi Mesh doméstico</p>
+            </div>
+
+            <h3>Topologia em Árvore (Tree)</h3>
+            <p>Combinação de topologias estrela em níveis hierárquicos. Muito usada em redes empresariais grandes.</p>
+
+            <h3>Topologia Híbrida</h3>
+            <p>Combinação de duas ou mais topologias. <strong>A maioria das redes reais são híbridas!</strong></p>
+
+            <h3>Tabela Comparativa</h3>
+            <table>
+              <tr><th>Topologia</th><th>Custo</th><th>Confiabilidade</th><th>Usabilidade Hoje</th></tr>
+              <tr><td>Barramento</td><td>Baixo</td><td>Baixa</td><td>❌ Desuso</td></tr>
+              <tr><td>Anel</td><td>Médio</td><td>Média</td><td>⚠️ Limitado</td></tr>
+              <tr><td>⭐ Estrela</td><td>Médio</td><td>Alta</td><td>✅ Padrão</td></tr>
+              <tr><td>Malha</td><td>Alto</td><td>Muito Alta</td><td>✅ Crítico</td></tr>
+              <tr><td>Árvore</td><td>Alto</td><td>Alta</td><td>✅ Empresarial</td></tr>
+            </table>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Desenhe Topologias!</h4>
+              <p>Usando o <strong>Cisco Packet Tracer</strong> ou <strong>Draw.io</strong>:</p>
+              <p>1. Desenhe uma topologia em estrela com 1 switch e 6 computadores<br>
+              2. Desenhe uma topologia em árvore com 1 roteador, 2 switches e 8 computadores<br>
+              3. Compare visualmente as diferenças</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual a topologia mais usada em redes residenciais e empresariais hoje?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Barramento</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Estrela</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Anel</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO II — Modelos de Referência",
+      aulas: [
+        {
+          titulo: "Aula 4 — Modelo OSI",
+          tag: "Modelo OSI",
+          conteudo: `
+            <h3>O Que é o Modelo OSI?</h3>
+            <p><strong>OSI</strong> = <strong>Open Systems Interconnection</strong> (Interconexão de Sistemas Abertos)</p>
+            <p>É um modelo teórico criado em 1984 pela ISO para <strong>padronizar a comunicação entre redes</strong>. Divide a comunicação em <strong>7 camadas</strong>, cada uma com uma função específica.</p>
+
+            <div class="info-box">
+              <h4>💡 Por Que Existe?</h4>
+              <p>Antes do OSI, cada fabricante criava sua própria forma de rede — e elas não se "conversavam"! O OSI veio para que <strong>qualquer equipamento de qualquer marca</strong> possa se comunicar.</p>
+            </div>
+
+            <h3>As 7 Camadas do Modelo OSI</h3>
+            <table>
+              <tr><th>Camada</th><th>Nome</th><th>Função Principal</th><th>Exemplo</th></tr>
+              <tr><td>7</td><td>Aplicação</td><td>Interface com o usuário</td><td>HTTP, FTP, SMTP</td></tr>
+              <tr><td>6</td><td>Apresentação</td><td>Formato e criptografia dos dados</td><td>SSL/TLS, JPG, MP3</td></tr>
+              <tr><td>5</td><td>Sessão</td><td>Controle de sessões/diálogos</td><td>NetBIOS, RPC</td></tr>
+              <tr><td>4</td><td>Transporte</td><td>Entrega fim-a-fim, confiabilidade</td><td>TCP, UDP</td></tr>
+              <tr><td>3</td><td>Rede</td><td>Endereçamento lógico e roteamento</td><td>IP, ICMP</td></tr>
+              <tr><td>2</td><td>Enlace</td><td>Endereçamento físico (MAC)</td><td>Ethernet, Wi-Fi</td></tr>
+              <tr><td>1</td><td>Física</td><td>Transmissão dos bits no meio</td><td>Cabos, conectores, sinais</td></tr>
+            </table>
+
+            <h3>Mnemônica para Decorar 🧠</h3>
+            <div class="success-box">
+              <h4>Da camada 1 para a 7:</h4>
+              <p><strong>"Fui Estudar Redes Toda Sexta-feira A Pé"</strong></p>
+              <p>F = Física | E = Enlace | R = Rede | T = Transporte | S = Sessão | A = Apresentação | P = Aplicação</p>
+            </div>
+
+            <h3>Detalhando Cada Camada</h3>
+
+            <h3>📡 Camada 1 — Física</h3>
+            <div class="info-box">
+              <h4>O Mundo Real</h4>
+              <p>É o "hardware" da rede: <strong>cabos, conectores, sinais elétricos, ondas de rádio</strong>. Trabalha com <strong>bits (0 e 1)</strong>.</p>
+              <p>📦 Exemplos: cabo UTP, fibra óptica, hub, repetidor</p>
+            </div>
+
+            <h3>🔗 Camada 2 — Enlace</h3>
+            <div class="info-box">
+              <h4>Endereçamento Físico</h4>
+              <p>Organiza os bits em <strong>quadros (frames)</strong> e usa o <strong>endereço MAC</strong> para entregar na rede local.</p>
+              <p>📦 Equipamentos: <strong>switch</strong>, placa de rede<br>
+              📦 Protocolos: Ethernet, Wi-Fi (802.11), PPP</p>
+            </div>
+
+            <h3>🌐 Camada 3 — Rede</h3>
+            <div class="info-box">
+              <h4>Endereçamento Lógico</h4>
+              <p>Usa o <strong>endereço IP</strong> para encaminhar pacotes entre redes diferentes — é o que torna a internet possível!</p>
+              <p>📦 Equipamento: <strong>roteador</strong><br>
+              📦 Protocolos: IP, ICMP (ping), ARP</p>
+            </div>
+
+            <h3>🚚 Camada 4 — Transporte</h3>
+            <div class="info-box">
+              <h4>Entrega Fim-a-Fim</h4>
+              <p>Garante que os dados cheguem completos e na ordem certa. Dois protocolos principais:</p>
+              <p>• <strong>TCP:</strong> confiável, lento, com confirmação<br>
+              • <strong>UDP:</strong> rápido, sem garantia de entrega</p>
+            </div>
+
+            <h3>🗣️ Camada 5 — Sessão</h3>
+            <p>Estabelece, mantém e encerra <strong>sessões de comunicação</strong> entre aplicações.</p>
+
+            <h3>🎁 Camada 6 — Apresentação</h3>
+            <p>Cuida do <strong>formato</strong> dos dados: criptografia, compactação, codificação (UTF-8, JPG, MP3).</p>
+
+            <h3>👤 Camada 7 — Aplicação</h3>
+            <p>É o que o <strong>usuário enxerga</strong>: navegador web, e-mail, WhatsApp, jogos online.</p>
+
+            <h3>Encapsulamento de Dados</h3>
+            <div class="info-box">
+              <h4>📦 Como os Dados Viajam</h4>
+              <p>Quando você envia algo pela rede, ele "ganha embalagens" em cada camada (encapsulamento). Ao chegar no destino, as embalagens são removidas (desencapsulamento).</p>
+            </div>
+
+            <div class="diagram">
+              <svg width="100%" height="220" viewBox="0 0 700 220">
+                <rect x="300" y="20" width="100" height="30" fill="#E1BEE7" stroke="#333"/>
+                <text x="350" y="40" text-anchor="middle" font-size="11">DADOS</text>
+                <rect x="280" y="60" width="140" height="30" fill="#BBDEFB" stroke="#333"/>
+                <text x="300" y="80" font-size="10">TCP</text>
+                <text x="380" y="80" font-size="10">DADOS</text>
+                <rect x="260" y="100" width="180" height="30" fill="#C8E6C9" stroke="#333"/>
+                <text x="280" y="120" font-size="10">IP</text>
+                <text x="350" y="120" font-size="10">PACOTE</text>
+                <rect x="240" y="140" width="220" height="30" fill="#FFE0B2" stroke="#333"/>
+                <text x="260" y="160" font-size="10">MAC</text>
+                <text x="350" y="160" font-size="10">QUADRO</text>
+                <text x="430" y="160" font-size="10">MAC</text>
+                <rect x="220" y="180" width="260" height="30" fill="#FFCDD2" stroke="#333"/>
+                <text x="350" y="200" text-anchor="middle" font-size="11">SINAIS ELÉTRICOS / LUZ / RÁDIO (BITS)</text>
+              </svg>
+            </div>
+
+            <h3>Quem Trabalha em Cada Camada?</h3>
+            <table>
+              <tr><th>Equipamento</th><th>Camadas que Atua</th></tr>
+              <tr><td>Cabo, Hub</td><td>Camada 1</td></tr>
+              <tr><td>Switch</td><td>Camadas 1 e 2</td></tr>
+              <tr><td>Roteador</td><td>Camadas 1, 2 e 3</td></tr>
+              <tr><td>Firewall</td><td>Camadas 3 a 7</td></tr>
+              <tr><td>Computador / Servidor</td><td>Todas as 7 camadas</td></tr>
+            </table>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Em qual camada do modelo OSI o roteador trabalha?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Camada 2 (Enlace)</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Camada 3 (Rede)</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Camada 7 (Aplicação)</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 5 — Modelo TCP/IP",
+          tag: "TCP/IP",
+          conteudo: `
+            <h3>O Que é o Modelo TCP/IP?</h3>
+            <p>É o modelo <strong>prático</strong> usado na internet real! Foi criado antes do OSI (anos 70) e é mais simples — possui <strong>apenas 4 camadas</strong>.</p>
+
+            <div class="info-box">
+              <h4>💡 OSI vs TCP/IP</h4>
+              <p>O OSI é <strong>teórico (para estudar)</strong>; o TCP/IP é <strong>prático (o que realmente funciona)</strong>. Ambos coexistem!</p>
+            </div>
+
+            <h3>As 4 Camadas do TCP/IP</h3>
+            <table>
+              <tr><th>Camada TCP/IP</th><th>Função</th><th>Equivalente OSI</th><th>Protocolos</th></tr>
+              <tr><td>4. Aplicação</td><td>Programas e serviços</td><td>5, 6, 7 (OSI)</td><td>HTTP, FTP, DNS</td></tr>
+              <tr><td>3. Transporte</td><td>Entrega fim-a-fim</td><td>4 (OSI)</td><td>TCP, UDP</td></tr>
+              <tr><td>2. Internet</td><td>Endereçamento e roteamento</td><td>3 (OSI)</td><td>IP, ICMP</td></tr>
+              <tr><td>1. Acesso à Rede</td><td>Transmissão física</td><td>1, 2 (OSI)</td><td>Ethernet, Wi-Fi</td></tr>
+            </table>
+
+            <h3>Comparação Visual OSI vs TCP/IP</h3>
+            <div class="diagram">
+              <svg width="100%" height="320" viewBox="0 0 700 320">
+                <!-- OSI -->
+                <text x="150" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1976D2">MODELO OSI (7)</text>
+                <rect x="50" y="40" width="200" height="35" fill="#E1BEE7"/><text x="150" y="62" text-anchor="middle" font-size="12">7. Aplicação</text>
+                <rect x="50" y="78" width="200" height="35" fill="#E1BEE7"/><text x="150" y="100" text-anchor="middle" font-size="12">6. Apresentação</text>
+                <rect x="50" y="116" width="200" height="35" fill="#E1BEE7"/><text x="150" y="138" text-anchor="middle" font-size="12">5. Sessão</text>
+                <rect x="50" y="154" width="200" height="35" fill="#BBDEFB"/><text x="150" y="176" text-anchor="middle" font-size="12">4. Transporte</text>
+                <rect x="50" y="192" width="200" height="35" fill="#C8E6C9"/><text x="150" y="214" text-anchor="middle" font-size="12">3. Rede</text>
+                <rect x="50" y="230" width="200" height="35" fill="#FFE0B2"/><text x="150" y="252" text-anchor="middle" font-size="12">2. Enlace</text>
+                <rect x="50" y="268" width="200" height="35" fill="#FFCDD2"/><text x="150" y="290" text-anchor="middle" font-size="12">1. Física</text>
+
+                <!-- TCP/IP -->
+                <text x="500" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#00ACC1">MODELO TCP/IP (4)</text>
+                <rect x="400" y="40" width="200" height="111" fill="#E1BEE7"/><text x="500" y="100" text-anchor="middle" font-size="13" font-weight="bold">4. Aplicação</text>
+                <rect x="400" y="154" width="200" height="35" fill="#BBDEFB"/><text x="500" y="176" text-anchor="middle" font-size="13" font-weight="bold">3. Transporte</text>
+                <rect x="400" y="192" width="200" height="35" fill="#C8E6C9"/><text x="500" y="214" text-anchor="middle" font-size="13" font-weight="bold">2. Internet</text>
+                <rect x="400" y="230" width="200" height="73" fill="#FFE0B2"/><text x="500" y="270" text-anchor="middle" font-size="13" font-weight="bold">1. Acesso à Rede</text>
+              </svg>
+            </div>
+
+            <h3>Principais Protocolos de Aplicação</h3>
+            <table>
+              <tr><th>Protocolo</th><th>Porta</th><th>Função</th></tr>
+              <tr><td><strong>HTTP</strong></td><td>80</td><td>Navegação web (sem criptografia)</td></tr>
+              <tr><td><strong>HTTPS</strong></td><td>443</td><td>Navegação web segura (com SSL/TLS)</td></tr>
+              <tr><td><strong>FTP</strong></td><td>20, 21</td><td>Transferência de arquivos</td></tr>
+              <tr><td><strong>SSH</strong></td><td>22</td><td>Acesso remoto seguro</td></tr>
+              <tr><td><strong>Telnet</strong></td><td>23</td><td>Acesso remoto (inseguro)</td></tr>
+              <tr><td><strong>SMTP</strong></td><td>25</td><td>Envio de e-mails</td></tr>
+              <tr><td><strong>POP3</strong></td><td>110</td><td>Recebimento de e-mails</td></tr>
+              <tr><td><strong>IMAP</strong></td><td>143</td><td>Recebimento de e-mails (avançado)</td></tr>
+              <tr><td><strong>DNS</strong></td><td>53</td><td>Resolução de nomes (site → IP)</td></tr>
+              <tr><td><strong>DHCP</strong></td><td>67, 68</td><td>Atribuição automática de IP</td></tr>
+            </table>
+
+            <h3>Como Funciona o DNS? 🌐</h3>
+            <div class="info-box">
+              <h4>O "Catálogo Telefônico" da Internet</h4>
+              <p>Você digita <strong>www.google.com</strong>, mas a internet só entende números (IPs como 142.250.78.46).</p>
+              <p>O <strong>DNS</strong> traduz nomes em IPs para você não precisar decorar números!</p>
+            </div>
+
+            <h3>Como Funciona o DHCP? 📋</h3>
+            <div class="success-box">
+              <h4>Atribuição Automática de IP</h4>
+              <p>Quando você conecta no Wi-Fi de casa, o roteador (servidor DHCP) <strong>automaticamente</strong> entrega para seu celular:</p>
+              <p>• Endereço IP único<br>
+              • Máscara de sub-rede<br>
+              • Gateway padrão<br>
+              • Endereço do DNS</p>
+              <p>Sem isso, você teria que <strong>configurar manualmente</strong> todos esses dados!</p>
+            </div>
+
+            <h3>Exemplo Real: Acessando um Site</h3>
+            <div class="info-box">
+              <h4>🕵️ O Que Acontece Quando Você Acessa o YouTube?</h4>
+              <p><strong>1.</strong> Você digita youtube.com no navegador (camada Aplicação)<br>
+              <strong>2.</strong> O DNS converte youtube.com em IP (camada Aplicação)<br>
+              <strong>3.</strong> O navegador prepara uma requisição HTTPS (camada Aplicação)<br>
+              <strong>4.</strong> TCP organiza a entrega confiável (camada Transporte)<br>
+              <strong>5.</strong> IP define o caminho até o servidor do Google (camada Internet)<br>
+              <strong>6.</strong> Ethernet/Wi-Fi envia os bits pela rede (camada Acesso)<br>
+              <strong>7.</strong> Pacotes viajam por roteadores até o YouTube<br>
+              <strong>8.</strong> Resposta volta pelo mesmo caminho inverso</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual protocolo é responsável por traduzir nomes de sites em endereços IP?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">HTTP</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">DNS</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">DHCP</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 6 — Protocolos TCP e UDP",
+          tag: "TCP/UDP",
+          conteudo: `
+            <h3>Camada de Transporte — O Que Faz?</h3>
+            <p>É responsável por <strong>levar os dados do programa de origem ao programa de destino</strong>. Existem dois protocolos principais com filosofias <strong>completamente diferentes</strong>:</p>
+
+            <h3>TCP — Transmission Control Protocol</h3>
+            <div class="info-box">
+              <h4>🚚 O "Caminhão Confiável"</h4>
+              <p>O TCP <strong>garante que os dados cheguem</strong>: completos, na ordem certa, sem erros. Como uma carta registrada com aviso de recebimento.</p>
+              <p><strong>Características:</strong></p>
+              <p>• <strong>Orientado à conexão</strong> — estabelece um "canal" antes de transmitir<br>
+              • <strong>Confirma o recebimento</strong> de cada pacote (ACK)<br>
+              • <strong>Reenvia</strong> pacotes perdidos<br>
+              • <strong>Controla a velocidade</strong> para não sobrecarregar<br>
+              • Mais <strong>lento</strong>, porém <strong>confiável</strong></p>
+            </div>
+
+            <h3>O Famoso "Three-Way Handshake" 🤝</h3>
+            <div class="diagram">
+              <svg width="100%" height="200" viewBox="0 0 600 200">
+                <rect x="30" y="20" width="100" height="40" fill="#1976D2" rx="5"/>
+                <text x="80" y="45" text-anchor="middle" fill="white" font-weight="bold">CLIENTE</text>
+                <rect x="470" y="20" width="100" height="40" fill="#388E3C" rx="5"/>
+                <text x="520" y="45" text-anchor="middle" fill="white" font-weight="bold">SERVIDOR</text>
+
+                <line x1="130" y1="80" x2="470" y2="100" stroke="#FF6B35" stroke-width="2" marker-end="url(#arrow1)"/>
+                <text x="300" y="75" text-anchor="middle" font-size="12" fill="#333">1. SYN (Olá, quero conectar)</text>
+
+                <line x1="470" y1="120" x2="130" y2="140" stroke="#FF6B35" stroke-width="2" marker-end="url(#arrow1)"/>
+                <text x="300" y="115" text-anchor="middle" font-size="12" fill="#333">2. SYN-ACK (OK, vamos conectar)</text>
+
+                <line x1="130" y1="160" x2="470" y2="180" stroke="#FF6B35" stroke-width="2" marker-end="url(#arrow1)"/>
+                <text x="300" y="155" text-anchor="middle" font-size="12" fill="#333">3. ACK (Conexão estabelecida!)</text>
+
+                <defs>
+                  <marker id="arrow1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#FF6B35"/>
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+
+            <h3>UDP — User Datagram Protocol</h3>
+            <div class="warning-box">
+              <h4>🏃 O "Motoboy Rápido"</h4>
+              <p>O UDP <strong>envia os dados sem garantia</strong>. É como soltar uma carta no correio sem registrar — pode chegar, ou não.</p>
+              <p><strong>Características:</strong></p>
+              <p>• <strong>Sem conexão</strong> — envia direto<br>
+              • <strong>Sem confirmação</strong> de recebimento<br>
+              • <strong>Sem reenvio</strong> de pacotes perdidos<br>
+              • <strong>Sem controle</strong> de fluxo<br>
+              • Muito <strong>rápido</strong> e leve</p>
+            </div>
+
+            <h3>Comparativo TCP vs UDP</h3>
+            <table>
+              <tr><th>Característica</th><th>TCP</th><th>UDP</th></tr>
+              <tr><td>Conexão</td><td>Sim (handshake)</td><td>Não</td></tr>
+              <tr><td>Confiabilidade</td><td>Alta</td><td>Baixa</td></tr>
+              <tr><td>Velocidade</td><td>Mais lento</td><td>Mais rápido</td></tr>
+              <tr><td>Ordem dos pacotes</td><td>Garantida</td><td>Não garantida</td></tr>
+              <tr><td>Reenvio</td><td>Sim</td><td>Não</td></tr>
+              <tr><td>Sobrecarga (overhead)</td><td>Alta</td><td>Baixa</td></tr>
+              <tr><td>Uso típico</td><td>Web, email, arquivos</td><td>Vídeo, jogos, DNS</td></tr>
+            </table>
+
+            <h3>Quando Usar Cada Um?</h3>
+            <div class="cards">
+              <div class="card"><h4>🌐 TCP — Use Quando</h4><p>Você precisa que os dados cheguem INTEGRALMENTE: download, e-mail, sites, transferências bancárias.</p></div>
+              <div class="card"><h4>🎮 UDP — Use Quando</h4><p>Velocidade é mais importante que perfeição: jogos online, videochamadas, streaming, DNS.</p></div>
+            </div>
+
+            <h3>Por Que Vídeo Usa UDP? 🎬</h3>
+            <div class="info-box">
+              <h4>Pense Comigo!</h4>
+              <p>Em uma videochamada, se um pacote de vídeo é perdido, qual é melhor?<br>
+              ❌ <strong>TCP:</strong> Esperar reenviar o pacote → atraso → travamento<br>
+              ✅ <strong>UDP:</strong> Ignorar o pacote perdido → continuar fluxo → vídeo fluido</p>
+              <p>Por isso UDP é melhor para tempo real!</p>
+            </div>
+
+            <h3>Conceito de Portas 🚪</h3>
+            <p>Cada serviço de rede usa uma <strong>porta diferente</strong> no computador. Imagine seu PC como um prédio com várias portas:</p>
+            <ul>
+              <li>Porta 80 → site (HTTP)</li>
+              <li>Porta 443 → site seguro (HTTPS)</li>
+              <li>Porta 25 → envio de email</li>
+              <li>Porta 22 → SSH (acesso remoto)</li>
+              <li>Porta 53 → DNS</li>
+              <li>Porta 3389 → Área de trabalho remota (RDP)</li>
+            </ul>
+
+            <h3>Faixas de Portas</h3>
+            <table>
+              <tr><th>Faixa</th><th>Nome</th><th>Uso</th></tr>
+              <tr><td>0 — 1023</td><td>Well-Known Ports</td><td>Serviços padrões do sistema</td></tr>
+              <tr><td>1024 — 49151</td><td>Registered Ports</td><td>Serviços de aplicações registradas</td></tr>
+              <tr><td>49152 — 65535</td><td>Dynamic/Private</td><td>Conexões temporárias do usuário</td></tr>
+            </table>
+
+            <h3>Atividade Prática: Wireshark 🔍</h3>
+            <div class="success-box">
+              <h4>Veja o Tráfego de Verdade!</h4>
+              <p>O <strong>Wireshark</strong> é uma ferramenta que captura e mostra todo o tráfego de rede.</p>
+              <p>1. Instale o Wireshark (gratuito)<br>
+              2. Inicie a captura em sua interface de rede<br>
+              3. Acesse um site no navegador<br>
+              4. Pare a captura e observe os pacotes TCP, UDP, DNS<br>
+              5. Identifique o three-way handshake!</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual protocolo é mais adequado para uma videochamada ao vivo?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">TCP — mais confiável</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">UDP — mais rápido, menor latência</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">FTP — específico para vídeo</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO III — Meios de Transmissão e Cabeamento",
+      aulas: [
+        {
+          titulo: "Aula 7 — Meios Físicos de Transmissão",
+          tag: "Meios Físicos",
+          conteudo: `
+            <h3>Como os Dados Viajam?</h3>
+            <p>Para os dados saírem de um computador para outro, eles precisam de um <strong>meio físico</strong> para se propagar. Existem dois grandes grupos:</p>
+            <div class="cards">
+              <div class="card"><h4>🔌 Meios Guiados</h4><p>Os dados viajam por dentro de um cabo físico.</p></div>
+              <div class="card"><h4>📡 Meios Não Guiados</h4><p>Os dados viajam pelo ar como ondas eletromagnéticas.</p></div>
+            </div>
+
+            <h3>Meios Guiados — Cabos</h3>
+
+            <h3>1. Cabo Coaxial</h3>
+            <div class="info-box">
+              <h4>Histórico</h4>
+              <p>Foi muito usado em redes antigas e em TV a cabo. Hoje praticamente em desuso para dados.</p>
+              <p>✅ Resistente a interferências<br>
+              ❌ Grosso, pouco flexível, lento</p>
+            </div>
+
+            <h3>2. Par Trançado (UTP/STP) ⭐</h3>
+            <div class="success-box">
+              <h4>O Mais Usado em Redes Locais!</h4>
+              <p>É aquele cabo "azul" ou "cinza" com 4 pares de fios trançados.</p>
+              <p>• <strong>UTP</strong> = Unshielded Twisted Pair (sem blindagem)<br>
+              • <strong>STP</strong> = Shielded Twisted Pair (com blindagem metálica)<br>
+              • <strong>FTP</strong> = Foiled Twisted Pair (folha metálica)</p>
+            </div>
+
+            <h3>Categorias de Cabo Par Trançado</h3>
+            <table>
+              <tr><th>Categoria</th><th>Velocidade</th><th>Frequência</th><th>Aplicação</th></tr>
+              <tr><td>Cat 3</td><td>10 Mbps</td><td>16 MHz</td><td>Telefonia (antigo)</td></tr>
+              <tr><td>Cat 5</td><td>100 Mbps</td><td>100 MHz</td><td>Redes antigas</td></tr>
+              <tr><td><strong>Cat 5e</strong></td><td>1 Gbps</td><td>100 MHz</td><td>Muito usado ainda</td></tr>
+              <tr><td><strong>Cat 6</strong></td><td>1 Gbps (10 G até 55m)</td><td>250 MHz</td><td>Padrão atual</td></tr>
+              <tr><td>Cat 6a</td><td>10 Gbps</td><td>500 MHz</td><td>Profissional</td></tr>
+              <tr><td>Cat 7</td><td>10 Gbps</td><td>600 MHz</td><td>Data center</td></tr>
+              <tr><td>Cat 8</td><td>40 Gbps</td><td>2000 MHz</td><td>Data center high-end</td></tr>
+            </table>
+
+            <div class="warning-box">
+              <h4>⚠️ Limite Importante</h4>
+              <p>Em todas as categorias, o <strong>comprimento máximo é 100 metros</strong> (90m fixo + 10m de patch cord). Acima disso, sinal degrada!</p>
+            </div>
+
+            <h3>Por Que os Fios São Trançados?</h3>
+            <div class="info-box">
+              <h4>🔄 Engenharia Inteligente</h4>
+              <p>Os fios são trançados para <strong>cancelar interferências eletromagnéticas</strong>. Quanto mais trançados (mais voltas por metro), melhor a categoria!</p>
+            </div>
+
+            <h3>3. Fibra Óptica 🔦</h3>
+            <div class="success-box">
+              <h4>A Tecnologia do Futuro (e Presente)</h4>
+              <p>Usa <strong>luz</strong> em vez de eletricidade. Vantagens:</p>
+              <p>✅ <strong>Altíssima velocidade</strong> (até centenas de Gbps)<br>
+              ✅ <strong>Longas distâncias</strong> (até 100 km)<br>
+              ✅ <strong>Imune a interferências</strong><br>
+              ✅ <strong>Segura</strong> (difícil de grampear)<br>
+              ❌ Mais cara que cobre<br>
+              ❌ Frágil — não pode dobrar muito</p>
+              <p>📌 Aprofundamos isso na disciplina específica de Fibra Óptica!</p>
+            </div>
+
+            <h3>Meios Não Guiados — Sem Fio</h3>
+
+            <h3>📡 Ondas de Rádio</h3>
+            <div class="info-box">
+              <h4>Wi-Fi, Bluetooth, Celular</h4>
+              <p>Frequências mais comuns:</p>
+              <p>• <strong>2,4 GHz:</strong> Wi-Fi (maior alcance, mais interferência)<br>
+              • <strong>5 GHz:</strong> Wi-Fi (mais rápido, menor alcance)<br>
+              • <strong>6 GHz:</strong> Wi-Fi 6E (novidade)<br>
+              • <strong>700 MHz a 3,5 GHz:</strong> Telefonia móvel (4G, 5G)</p>
+            </div>
+
+            <h3>📶 Infravermelho</h3>
+            <p>Curto alcance, sem obstáculos (controle remoto, antigos celulares). Quase em desuso para dados.</p>
+
+            <h3>📡 Micro-ondas</h3>
+            <p>Comunicação ponto a ponto (antenas direcionais). Usado em links de longa distância e satélites.</p>
+
+            <h3>🛰️ Satélite</h3>
+            <p>Cobertura global, alta latência. Ex: Starlink, internet via satélite em áreas remotas.</p>
+
+            <h3>Comparativo Geral</h3>
+            <table>
+              <tr><th>Meio</th><th>Velocidade</th><th>Distância</th><th>Custo</th><th>Interferência</th></tr>
+              <tr><td>Par trançado</td><td>Até 10 Gbps</td><td>100 m</td><td>Baixo</td><td>Média</td></tr>
+              <tr><td>Coaxial</td><td>Até 1 Gbps</td><td>500 m</td><td>Médio</td><td>Baixa</td></tr>
+              <tr><td>Fibra óptica</td><td>Até 100+ Gbps</td><td>100 km</td><td>Alto</td><td>Nenhuma</td></tr>
+              <tr><td>Wi-Fi</td><td>Até 9.6 Gbps</td><td>50-100 m</td><td>Baixo</td><td>Alta</td></tr>
+              <tr><td>Satélite</td><td>Até 200 Mbps</td><td>Global</td><td>Muito Alto</td><td>Alta</td></tr>
+            </table>
+
+            <h3>Atividade Prática 🔬</h3>
+            <div class="success-box">
+              <h4>Identificação de Cabos</h4>
+              <p>O professor trará amostras de cada tipo de cabo. Em duplas:</p>
+              <p>1. Identifique cada tipo (UTP, STP, coaxial, fibra)<br>
+              2. Examine a categoria do par trançado (Cat 5e, Cat 6...)<br>
+              3. Conte os pares trançados e observe a torção<br>
+              4. Compare a espessura e peso</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual o comprimento máximo de um cabo par trançado em uma rede Ethernet?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">10 metros</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">100 metros</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">1000 metros</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 8 — Cabeamento Estruturado",
+          tag: "Cabeamento",
+          conteudo: `
+            <h3>O Que é Cabeamento Estruturado?</h3>
+            <p>É um <strong>sistema padronizado</strong> de cabeamento que organiza toda a infraestrutura de rede de um prédio de forma eficiente, escalável e fácil de manter.</p>
+
+            <div class="info-box">
+              <h4>💡 Por Que Estruturar?</h4>
+              <p>Imagine um prédio com 100 computadores onde cada cabo foi puxado "como deu" — uma bagunça! Cabeamento estruturado resolve isso com <strong>regras, padrões e organização</strong>.</p>
+            </div>
+
+            <h3>Normas Principais</h3>
+            <table>
+              <tr><th>Norma</th><th>O Que Define</th></tr>
+              <tr><td><strong>ABNT NBR 14565</strong></td><td>Cabeamento estruturado para edifícios comerciais (Brasil)</td></tr>
+              <tr><td><strong>ANSI/TIA-568</strong></td><td>Padrão norte-americano (mais usado mundialmente)</td></tr>
+              <tr><td><strong>ISO/IEC 11801</strong></td><td>Padrão internacional</td></tr>
+              <tr><td><strong>ABNT NBR 16415</strong></td><td>Específica para data centers</td></tr>
+            </table>
+
+            <h3>Os 6 Subsistemas do Cabeamento Estruturado</h3>
+
+            <h3>1. 🏢 Entrada do Edifício (EF)</h3>
+            <p>Ponto onde a infraestrutura externa (do provedor) entra no prédio. Geralmente uma sala ou armário no térreo.</p>
+
+            <h3>2. 🖥️ Sala de Equipamentos (ER)</h3>
+            <p>Onde ficam servidores, roteadores, switches principais. Climatizada, com energia redundante.</p>
+
+            <h3>3. 🌐 Cabeamento Backbone (Vertical)</h3>
+            <p>Liga a sala de equipamentos aos armários de telecomunicações de cada andar. Geralmente fibra óptica.</p>
+
+            <h3>4. 📦 Sala/Armário de Telecomunicações (TR)</h3>
+            <p>Existe em cada andar. Contém o rack com switches, patch panels e organizadores.</p>
+
+            <h3>5. 🔗 Cabeamento Horizontal</h3>
+            <p>Liga o rack do andar até as <strong>tomadas de rede</strong> nas estações de trabalho. Usa par trançado (Cat 6 geralmente).</p>
+
+            <h3>6. 🖱️ Área de Trabalho (WA)</h3>
+            <p>É onde o usuário final fica: ponto de rede na parede + cabo de manobra até o computador.</p>
+
+            <h3>Componentes Físicos do Rack</h3>
+            <div class="cards">
+              <div class="card"><h4>📦 Patch Panel</h4><p>Painel que centraliza e organiza as conexões dos cabos vindos das tomadas.</p></div>
+              <div class="card"><h4>🔌 Switch</h4><p>Equipamento ativo que distribui a rede para os dispositivos.</p></div>
+              <div class="card"><h4>📐 Organizador</h4><p>Suporte que mantém os cabos arrumados, evitando emaranhados.</p></div>
+              <div class="card"><h4>🧵 Patch Cord</h4><p>Cabo curto e flexível que conecta patch panel ao switch.</p></div>
+              <div class="card"><h4>📡 Rack</h4><p>O "armário" físico que abriga tudo (padrão 19 polegadas).</p></div>
+              <div class="card"><h4>🔋 No-break</h4><p>Mantém os equipamentos ligados em caso de queda de energia.</p></div>
+            </div>
+
+            <h3>Como Funciona o Caminho Completo</h3>
+            <div class="info-box">
+              <h4>🛣️ Da Tomada ao Computador</h4>
+              <p><strong>Tomada de rede (parede)</strong> ↔ <strong>Cabo horizontal (90m)</strong> ↔ <strong>Patch Panel</strong> ↔ <strong>Patch Cord</strong> ↔ <strong>Switch</strong> ↔ <strong>Rede</strong></p>
+              <p>A regra dos <strong>90 + 10 = 100m</strong>:<br>
+              • 90m do cabo fixo (horizontal)<br>
+              • 5m do patch cord no rack<br>
+              • 5m do cabo de manobra na mesa</p>
+            </div>
+
+            <h3>Identificação e Etiquetagem 🏷️</h3>
+            <div class="success-box">
+              <h4>Padrão Profissional</h4>
+              <p>Cada ponto deve ter uma <strong>etiqueta única e padronizada</strong>. Exemplo:</p>
+              <p><strong>"TR-02-A-15"</strong> significa:<br>
+              • TR-02 = Telecom Room do 2º andar<br>
+              • A = Patch Panel A<br>
+              • 15 = Porta 15</p>
+              <p>Essa mesma identificação aparece na tomada da estação de trabalho!</p>
+            </div>
+
+            <h3>Boas Práticas Profissionais</h3>
+            <ul>
+              <li>Use sempre <strong>cabos da mesma categoria</strong> em todo o sistema</li>
+              <li>Mantenha o cabeamento <strong>afastado de fontes de interferência</strong> (motores, fluorescentes)</li>
+              <li>Respeite o <strong>raio mínimo de curvatura</strong> dos cabos (4x o diâmetro)</li>
+              <li><strong>Não amarre cabos muito apertados</strong> — use velcro em vez de abraçadeira plástica</li>
+              <li><strong>Documente tudo</strong>: planta com os pontos, tabela de conexões</li>
+              <li><strong>Teste e certifique</strong> cada ponto após a instalação</li>
+            </ul>
+
+            <h3>Etapas de um Projeto de Cabeamento</h3>
+            <table>
+              <tr><th>Etapa</th><th>Descrição</th></tr>
+              <tr><td>1. Levantamento</td><td>Quantos pontos? Onde? Que tecnologia?</td></tr>
+              <tr><td>2. Projeto</td><td>Plantas, lista de materiais, orçamento</td></tr>
+              <tr><td>3. Aquisição</td><td>Compra de materiais homologados</td></tr>
+              <tr><td>4. Instalação</td><td>Passagem de cabos, montagem do rack</td></tr>
+              <tr><td>5. Identificação</td><td>Etiquetagem de todos os pontos</td></tr>
+              <tr><td>6. Testes</td><td>Certificação de cada cabo</td></tr>
+              <tr><td>7. Documentação</td><td>As-built, laudos, manuais</td></tr>
+              <tr><td>8. Entrega</td><td>Treinamento do usuário e garantia</td></tr>
+            </table>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Visita Técnica</h4>
+              <p>Visite o <strong>rack do laboratório/instituição</strong> e identifique:</p>
+              <p>• Patch panels<br>
+              • Switches<br>
+              • Organizadores<br>
+              • Etiquetagem<br>
+              • Boas e más práticas observadas<br>
+              • Tire fotos (com permissão) e elabore um pequeno relatório</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual equipamento centraliza e organiza as conexões dos cabos vindos das tomadas de rede?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Switch</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Patch Panel</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Roteador</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 9 — Prática de Crimpagem",
+          tag: "Prática",
+          conteudo: `
+            <h3>O Que é Crimpagem?</h3>
+            <p>Crimpagem é o processo de <strong>fixar um conector RJ-45 na ponta de um cabo par trançado</strong>. É uma habilidade essencial para qualquer técnico de redes!</p>
+
+            <h3>Ferramentas Necessárias</h3>
+            <div class="cards">
+              <div class="card"><h4>✂️ Alicate de Crimpagem</h4><p>Ferramenta principal que fixa o conector no cabo.</p></div>
+              <div class="card"><h4>🔪 Decapador</h4><p>Remove a capa externa do cabo sem danificar os fios internos.</p></div>
+              <div class="card"><h4>🔌 Conectores RJ-45</h4><p>O conector plástico com 8 pinos dourados.</p></div>
+              <div class="card"><h4>🧪 Testador de Cabos</h4><p>Verifica se a crimpagem foi feita corretamente.</p></div>
+              <div class="card"><h4>🧤 Capa Protetora</h4><p>"Bota" plástica que protege o conector (opcional).</p></div>
+            </div>
+
+            <h3>Padrões de Crimpagem T568A e T568B</h3>
+            <div class="info-box">
+              <h4>📋 Os Dois Padrões</h4>
+              <p>Existem 2 sequências oficiais de cores. Você precisa <strong>decorar pelo menos uma</strong>!</p>
+            </div>
+
+            <h3>Padrão T568A</h3>
+            <table>
+              <tr><th>Pino</th><th>Cor</th></tr>
+              <tr><td>1</td><td>🟢⚪ Branco/Verde</td></tr>
+              <tr><td>2</td><td>🟢 Verde</td></tr>
+              <tr><td>3</td><td>🟠⚪ Branco/Laranja</td></tr>
+              <tr><td>4</td><td>🔵 Azul</td></tr>
+              <tr><td>5</td><td>🔵⚪ Branco/Azul</td></tr>
+              <tr><td>6</td><td>🟠 Laranja</td></tr>
+              <tr><td>7</td><td>🟤⚪ Branco/Marrom</td></tr>
+              <tr><td>8</td><td>🟤 Marrom</td></tr>
+            </table>
+
+            <h3>Padrão T568B ⭐ (Mais usado no Brasil)</h3>
+            <table>
+              <tr><th>Pino</th><th>Cor</th></tr>
+              <tr><td>1</td><td>🟠⚪ Branco/Laranja</td></tr>
+              <tr><td>2</td><td>🟠 Laranja</td></tr>
+              <tr><td>3</td><td>🟢⚪ Branco/Verde</td></tr>
+              <tr><td>4</td><td>🔵 Azul</td></tr>
+              <tr><td>5</td><td>🔵⚪ Branco/Azul</td></tr>
+              <tr><td>6</td><td>🟢 Verde</td></tr>
+              <tr><td>7</td><td>🟤⚪ Branco/Marrom</td></tr>
+              <tr><td>8</td><td>🟤 Marrom</td></tr>
+            </table>
+
+            <h3>Cabo Direto vs Cabo Crossover</h3>
+            <div class="cards">
+              <div class="card"><h4>➡️ Cabo Direto (Straight-Through)</h4><p>Ambas as pontas no <strong>mesmo padrão</strong> (T568B + T568B). Usado para conectar dispositivos <strong>diferentes</strong>: PC ↔ Switch, Switch ↔ Roteador.</p></div>
+              <div class="card"><h4>🔀 Cabo Crossover</h4><p>Uma ponta T568A e outra T568B. Usado para conectar dispositivos <strong>iguais</strong>: PC ↔ PC, Switch ↔ Switch.</p></div>
+            </div>
+
+            <div class="info-box">
+              <h4>💡 Hoje em Dia</h4>
+              <p>A maioria dos equipamentos modernos tem <strong>Auto-MDIX</strong>, que detecta automaticamente o tipo de cabo. Mas como técnico, você precisa saber a diferença!</p>
+            </div>
+
+            <h3>Passo a Passo da Crimpagem ✂️</h3>
+            <div class="success-box">
+              <h4>📋 Procedimento Completo</h4>
+              <p><strong>1.</strong> Corte o cabo no comprimento desejado<br>
+              <strong>2.</strong> Decape cerca de <strong>3 cm</strong> da capa externa<br>
+              <strong>3.</strong> Separe os 4 pares trançados<br>
+              <strong>4.</strong> Destrance cada par<br>
+              <strong>5.</strong> Ordene os fios na sequência T568B (ou A)<br>
+              <strong>6.</strong> Alise os fios bem retinhos e juntos<br>
+              <strong>7.</strong> Corte as pontas no mesmo comprimento (deixe ~1,5 cm)<br>
+              <strong>8.</strong> Insira no conector RJ-45 com os pinos para CIMA<br>
+              <strong>9.</strong> Empurre firme — os fios devem chegar até o fim<br>
+              <strong>10.</strong> Verifique a sequência olhando o conector<br>
+              <strong>11.</strong> Insira no alicate de crimpagem<br>
+              <strong>12.</strong> Pressione com força total<br>
+              <strong>13.</strong> Repita do outro lado<br>
+              <strong>14.</strong> Teste com testador de cabos!</p>
+            </div>
+
+            <h3>Erros Comuns ❌</h3>
+            <div class="warning-box">
+              <h4>Atenção!</h4>
+              <p>• <strong>Capa externa não entrou no conector:</strong> cabo solta com facilidade<br>
+              • <strong>Fios em ordem errada:</strong> rede não funciona ou intermitente<br>
+              • <strong>Fios não chegaram ao fim do conector:</strong> sem contato com pinos<br>
+              • <strong>Fios cortados em comprimentos diferentes:</strong> alguns não fazem contato<br>
+              • <strong>Crimpagem fraca:</strong> contato ruim, intermitência</p>
+            </div>
+
+            <h3>Como Usar o Testador de Cabos</h3>
+            <div class="info-box">
+              <h4>🧪 Procedimento</h4>
+              <p>1. Conecte uma ponta na unidade principal<br>
+              2. Conecte a outra ponta na unidade remota<br>
+              3. Ligue o testador<br>
+              4. Observe os LEDs piscarem em sequência 1-8<br>
+              <strong>Resultado esperado:</strong> sequência 1→2→3→4→5→6→7→8 acendendo nos dois lados.<br>
+              <strong>Se algum LED não acender:</strong> aquele pino está com defeito (refaça!).</p>
+            </div>
+
+            <h3>Aula Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Meta da Aula</h4>
+              <p>Cada aluno deve crimpar e testar com sucesso:</p>
+              <p>✅ <strong>2 cabos diretos</strong> (T568B nas duas pontas)<br>
+              ✅ <strong>1 cabo crossover</strong> (T568A em uma ponta, T568B na outra)<br>
+              ✅ <strong>Teste de continuidade</strong> aprovado em todos</p>
+              <p>📌 É normal precisar refazer várias vezes nas primeiras tentativas — pratique!</p>
+            </div>
+
+            <h3>Dicas dos Profissionais 💡</h3>
+            <div class="info-box">
+              <h4>Boas Práticas</h4>
+              <p>✅ Use cabo de boa qualidade (Furukawa, Legrand, Panduit)<br>
+              ✅ Use conectores RJ-45 de qualidade (não os mais baratos)<br>
+              ✅ Mantenha as ferramentas limpas e em bom estado<br>
+              ✅ A capa externa deve entrar PELO MENOS 0,5cm no conector<br>
+              ✅ Não destrance os pares mais do que o necessário<br>
+              ✅ Sempre teste após crimpar — nunca confie só na vista!</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Para conectar um computador a um switch, qual tipo de cabo é necessário?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Cabo direto (straight-through)</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Cabo crossover</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Cabo coaxial</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO IV — Equipamentos de Rede",
+      aulas: [
+        {
+          titulo: "Aula 10 — Equipamentos Ativos",
+          tag: "Equipamentos",
+          conteudo: `
+            <h3>Equipamentos Ativos vs Passivos</h3>
+            <div class="cards">
+              <div class="card"><h4>⚡ Ativos</h4><p>Precisam de energia elétrica para funcionar. Processam e direcionam dados ativamente.</p></div>
+              <div class="card"><h4>🔌 Passivos</h4><p>Não precisam de energia. Apenas conduzem o sinal (cabos, conectores, patch panels).</p></div>
+            </div>
+
+            <h3>Placa de Rede (NIC)</h3>
+            <div class="info-box">
+              <h4>📋 O Coração do Computador na Rede</h4>
+              <p>NIC = <strong>Network Interface Card</strong>. Todo computador precisa de uma para se conectar à rede.</p>
+              <p>Tipos:</p>
+              <p>• <strong>On-board:</strong> integrada à placa-mãe (padrão hoje)<br>
+              • <strong>PCI/PCIe:</strong> placa separada<br>
+              • <strong>USB:</strong> adaptador externo<br>
+              • <strong>Wi-Fi:</strong> sem fio (laptop, celular)</p>
+              <p>Cada placa de rede tem um <strong>endereço MAC único</strong> de 48 bits!</p>
+            </div>
+
+            <h3>Hub (Concentrador) 📛</h3>
+            <div class="warning-box">
+              <h4>⚠️ Tecnologia Obsoleta!</h4>
+              <p>O hub repete o sinal que recebe para <strong>TODAS</strong> as portas. Problemas:</p>
+              <p>❌ Causa colisões<br>
+              ❌ Baixo desempenho<br>
+              ❌ Sem segurança (todos veem tudo)<br>
+              ❌ Não permite transmissão simultânea</p>
+              <p>📌 Hoje <strong>não se compra mais hub</strong> — substituído pelo switch.</p>
+            </div>
+
+            <h3>Switch (Comutador) ⭐</h3>
+            <div class="success-box">
+              <h4>O Equipamento Mais Usado</h4>
+              <p>Diferente do hub, o switch é "inteligente":</p>
+              <p>✅ Envia o sinal <strong>APENAS para a porta de destino</strong><br>
+              ✅ Aprende e armazena endereços MAC<br>
+              ✅ Permite comunicação simultânea entre várias portas<br>
+              ✅ Cria "circuitos virtuais" para cada conexão</p>
+              <p><strong>Camada OSI:</strong> 2 (Enlace) — alguns avançados na 3<br>
+              <strong>Tipos:</strong> 5, 8, 16, 24, 48 portas (e mais)</p>
+            </div>
+
+            <h3>Switch Gerenciável vs Não Gerenciável</h3>
+            <table>
+              <tr><th>Característica</th><th>Não Gerenciável</th><th>Gerenciável</th></tr>
+              <tr><td>Configuração</td><td>Plug-and-play</td><td>Web/CLI</td></tr>
+              <tr><td>VLANs</td><td>❌</td><td>✅</td></tr>
+              <tr><td>QoS</td><td>❌</td><td>✅</td></tr>
+              <tr><td>SNMP</td><td>❌</td><td>✅</td></tr>
+              <tr><td>Custo</td><td>Baixo</td><td>Alto</td></tr>
+              <tr><td>Uso</td><td>Casa, escritório pequeno</td><td>Empresa, data center</td></tr>
+            </table>
+
+            <h3>Roteador (Router) 🛣️</h3>
+            <div class="info-box">
+              <h4>O "Carteiro" da Internet</h4>
+              <p>O roteador <strong>interliga redes diferentes</strong> e decide o melhor caminho para os pacotes.</p>
+              <p><strong>Funções principais:</strong></p>
+              <p>• Roteamento entre redes (LAN ↔ WAN)<br>
+              • Atribuição de IPs (DHCP)<br>
+              • Firewall básico<br>
+              • NAT (Network Address Translation)<br>
+              • Em casa: também faz Wi-Fi</p>
+              <p><strong>Camada OSI:</strong> 3 (Rede)<br>
+              <strong>Marcas comuns:</strong> Cisco, Mikrotik, TP-Link, Intelbras</p>
+            </div>
+
+            <h3>Modem 📞</h3>
+            <p>O modem <strong>converte sinais</strong> entre o tipo usado pela operadora (analógico, fibra, cabo) e o digital usado pela rede local.</p>
+            <ul>
+              <li><strong>Cable Modem:</strong> internet via cabo coaxial</li>
+              <li><strong>ADSL Modem:</strong> internet via linha telefônica</li>
+              <li><strong>ONU/ONT:</strong> modem de fibra óptica (visto na disciplina de Fibra)</li>
+            </ul>
+
+            <h3>Access Point (Ponto de Acesso) 📡</h3>
+            <div class="info-box">
+              <h4>O "Wi-Fi do Ambiente"</h4>
+              <p>Equipamento que <strong>cria a rede sem fio</strong>. Pode ser:</p>
+              <p>• Integrado ao roteador (em casa)<br>
+              • Dispositivo separado (em empresas)<br>
+              • Múltiplos APs interligados (Wi-Fi Mesh)</p>
+              <p>Padrão atual: <strong>Wi-Fi 6/6E (802.11ax)</strong></p>
+            </div>
+
+            <h3>Outros Equipamentos</h3>
+            <div class="cards">
+              <div class="card"><h4>🌉 Bridge</h4><p>Interliga duas redes na camada 2. Hoje pouco usado (switch faz isso melhor).</p></div>
+              <div class="card"><h4>📶 Repetidor</h4><p>Amplifica o sinal Wi-Fi para aumentar o alcance.</p></div>
+              <div class="card"><h4>🔥 Firewall</h4><p>Equipamento de segurança que filtra tráfego entre redes.</p></div>
+              <div class="card"><h4>🎛️ Controladora WLAN</h4><p>Gerencia múltiplos access points centralmente.</p></div>
+              <div class="card"><h4>⚖️ Load Balancer</h4><p>Distribui o tráfego entre vários servidores.</p></div>
+              <div class="card"><h4>🛡️ IDS/IPS</h4><p>Detecta/previne intrusões na rede.</p></div>
+            </div>
+
+            <h3>Resumo: Qual Equipamento Para Quê?</h3>
+            <table>
+              <tr><th>Necessidade</th><th>Equipamento</th></tr>
+              <tr><td>Conectar 5 computadores numa LAN</td><td>Switch</td></tr>
+              <tr><td>Conectar a rede da casa à internet</td><td>Roteador</td></tr>
+              <tr><td>Estender Wi-Fi para outro andar</td><td>Repetidor ou AP adicional</td></tr>
+              <tr><td>Internet em fibra óptica</td><td>ONU/ONT</td></tr>
+              <tr><td>Proteger rede empresarial</td><td>Firewall</td></tr>
+              <tr><td>Wi-Fi em sala de eventos</td><td>Access Point profissional</td></tr>
+            </table>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual equipamento envia o sinal apenas para a porta de destino correta, sem causar colisões?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Hub</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Switch</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Repetidor</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 11 — Prática com Equipamentos",
+          tag: "Prática",
+          conteudo: `
+            <h3>Hora de Colocar a Mão na Massa! 🛠️</h3>
+            <p>Nesta aula prática, vamos <strong>identificar fisicamente</strong> cada equipamento, conhecer suas portas e conexões, e montar uma pequena rede funcional no laboratório.</p>
+
+            <h3>Identificação Física dos Equipamentos</h3>
+
+            <h3>Switch — Anatomia Externa</h3>
+            <div class="info-box">
+              <h4>🔍 O Que Observar</h4>
+              <p>• <strong>Portas RJ-45</strong> numeradas (5, 8, 16, 24, 48...)<br>
+              • <strong>LEDs de status</strong> de cada porta:<br>
+              &nbsp;&nbsp;• Verde fixo = conectado<br>
+              &nbsp;&nbsp;• Verde piscando = tráfego ativo<br>
+              &nbsp;&nbsp;• Apagado = sem conexão<br>
+              &nbsp;&nbsp;• Amarelo = baixa velocidade ou problema<br>
+              • <strong>Porta de console</strong> (em modelos gerenciáveis)<br>
+              • <strong>Slots SFP/SFP+</strong> (para fibra óptica)<br>
+              • <strong>Botão Reset</strong><br>
+              • <strong>Fonte de alimentação</strong></p>
+            </div>
+
+            <h3>Roteador Wi-Fi Doméstico — Anatomia</h3>
+            <div class="info-box">
+              <h4>🔍 Portas Comuns</h4>
+              <p>• <strong>1 porta WAN</strong> (geralmente azul ou amarela) — conecta ao modem<br>
+              • <strong>4 portas LAN</strong> (geralmente amarelas) — conectam dispositivos<br>
+              • <strong>Antenas Wi-Fi</strong> (2 a 4 antenas)<br>
+              • <strong>Porta USB</strong> (alguns modelos — compartilhar arquivos)<br>
+              • <strong>Botão WPS</strong> — conexão Wi-Fi simplificada<br>
+              • <strong>LEDs de status</strong> (Power, Wi-Fi, Internet, LAN)</p>
+            </div>
+
+            <h3>Montagem da Rede no Laboratório</h3>
+
+            <h3>Cenário Prático 1: Rede Simples (3 PCs)</h3>
+            <div class="success-box">
+              <h4>📋 Procedimento</h4>
+              <p><strong>Topologia:</strong> Estrela com switch central</p>
+              <p>1. Posicione o <strong>switch</strong> no centro da bancada<br>
+              2. Conecte os 3 computadores às portas do switch usando <strong>cabos diretos</strong><br>
+              3. Ligue tudo<br>
+              4. Verifique os LEDs do switch (devem acender em verde)<br>
+              5. Configure os IPs manualmente:<br>
+              &nbsp;&nbsp;• PC1: 192.168.1.10<br>
+              &nbsp;&nbsp;• PC2: 192.168.1.20<br>
+              &nbsp;&nbsp;• PC3: 192.168.1.30<br>
+              &nbsp;&nbsp;• Máscara: 255.255.255.0<br>
+              6. Teste com comando <strong>ping</strong> entre eles</p>
+            </div>
+
+            <h3>Cenário Prático 2: Rede com Internet</h3>
+            <div class="info-box">
+              <h4>📋 Adicionando Roteador</h4>
+              <p>1. Conecte o <strong>cabo da internet</strong> na porta WAN do roteador<br>
+              2. Conecte uma porta LAN do roteador ao switch<br>
+              3. Configure os PCs para <strong>obter IP automaticamente</strong> (DHCP)<br>
+              4. Acesse o roteador via navegador (geralmente <strong>192.168.0.1</strong> ou <strong>192.168.1.1</strong>)<br>
+              5. Configure usuário/senha do Wi-Fi<br>
+              6. Teste acesso à internet de cada PC</p>
+            </div>
+
+            <h3>Comandos Essenciais para Teste</h3>
+            <div class="info-box">
+              <h4>💻 No Windows (CMD)</h4>
+              <p>Abra o "Prompt de Comando" e teste:</p>
+            </div>
+
+            <div class="code">
+ipconfig          → Mostra a configuração de IP do PC
+ipconfig /all     → Mostra detalhes completos
+ping 192.168.1.20 → Testa conexão com outro PC
+ping google.com   → Testa conexão com a internet
+tracert google.com → Mostra o caminho até o destino
+nslookup google.com → Resolve nomes DNS
+            </div>
+
+            <h3>Configurando IP Manual no Windows</h3>
+            <div class="success-box">
+              <h4>📋 Passo a Passo</h4>
+              <p>1. <strong>Painel de Controle</strong> → Central de Rede e Compartilhamento<br>
+              2. Clique em <strong>"Alterar configurações do adaptador"</strong><br>
+              3. Botão direito na conexão Ethernet → <strong>Propriedades</strong><br>
+              4. Selecione <strong>"Protocolo TCP/IPv4"</strong> → Propriedades<br>
+              5. Marque <strong>"Usar o seguinte endereço IP"</strong><br>
+              6. Preencha:<br>
+              &nbsp;&nbsp;• Endereço IP<br>
+              &nbsp;&nbsp;• Máscara de sub-rede<br>
+              &nbsp;&nbsp;• Gateway padrão (IP do roteador)<br>
+              &nbsp;&nbsp;• DNS preferencial (8.8.8.8 — Google)<br>
+              7. <strong>OK</strong> e teste</p>
+            </div>
+
+            <h3>Identificando Problemas Comuns 🐛</h3>
+            <table>
+              <tr><th>Sintoma</th><th>Causa Provável</th><th>Solução</th></tr>
+              <tr><td>LED da porta apagado</td><td>Cabo desconectado ou ruim</td><td>Verificar cabo e crimpagem</td></tr>
+              <tr><td>Ping não responde</td><td>IP errado ou firewall</td><td>Conferir IP e desativar firewall</td></tr>
+              <tr><td>Sem internet</td><td>Sem gateway ou DNS</td><td>Configurar gateway e DNS</td></tr>
+              <tr><td>Internet lenta</td><td>Saturação ou cabo ruim</td><td>Testar com outro cabo</td></tr>
+              <tr><td>"IP duplicado"</td><td>Dois PCs com mesmo IP</td><td>Trocar IP ou usar DHCP</td></tr>
+            </table>
+
+            <h3>Atividade Prática Avançada 🚀</h3>
+            <div class="success-box">
+              <h4>Cisco Packet Tracer — Simulação</h4>
+              <p>Para quem quiser ir além, use o <strong>Cisco Packet Tracer</strong> (gratuito):</p>
+              <p>1. Crie uma topologia com:<br>
+              &nbsp;&nbsp;• 1 roteador<br>
+              &nbsp;&nbsp;• 1 switch<br>
+              &nbsp;&nbsp;• 4 PCs<br>
+              2. Configure IPs e gateways<br>
+              3. Teste conectividade com ping<br>
+              4. Observe os pacotes viajando em modo simulação<br>
+              5. Salve seu projeto</p>
+            </div>
+
+            <h3>Checklist da Aula ✅</h3>
+            <div class="info-box">
+              <h4>Você Conseguiu?</h4>
+              <p>☐ Identificou as portas do switch<br>
+              ☐ Identificou as portas do roteador<br>
+              ☐ Configurou IP manual em um PC<br>
+              ☐ Configurou IP automático (DHCP)<br>
+              ☐ Realizou ping com sucesso entre PCs<br>
+              ☐ Acessou a interface web do roteador<br>
+              ☐ Configurou Wi-Fi com senha<br>
+              ☐ Usou comandos ipconfig, ping, tracert</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual o IP padrão mais comum para acessar a configuração de um roteador doméstico?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">10.0.0.1</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">192.168.0.1 ou 192.168.1.1</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">8.8.8.8</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO V — Endereçamento IP",
+      aulas: [
+        {
+          titulo: "Aula 12 — Endereçamento IPv4",
+          tag: "IPv4",
+          conteudo: `
+            <h3>O Que é um Endereço IP?</h3>
+            <p>O <strong>endereço IP</strong> é o "RG" de cada dispositivo na rede. É um número único que identifica cada equipamento conectado.</p>
+
+            <div class="info-box">
+              <h4>📋 Estrutura do IPv4</h4>
+              <p>Composto por <strong>4 grupos de números</strong> (octetos), separados por pontos.</p>
+              <p>Cada grupo vai de <strong>0 a 255</strong>.</p>
+              <p>Exemplo: <strong>192.168.1.100</strong></p>
+            </div>
+
+            <h3>Como o Computador Vê</h3>
+            <p>Para nós, parece <strong>192.168.1.100</strong>, mas para o computador é:</p>
+            <div class="code">
+11000000 . 10101000 . 00000001 . 01100100
+   192         168         1          100
+            </div>
+            <p>Cada octeto tem <strong>8 bits</strong>, totalizando <strong>32 bits</strong> por endereço IPv4.</p>
+
+            <h3>Quantos IPs Existem?</h3>
+            <div class="warning-box">
+              <h4>⚠️ Esgotamento!</h4>
+              <p>Com 32 bits, temos <strong>2³² = aproximadamente 4,3 bilhões</strong> de endereços IPv4. Parecia muito... mas <strong>já acabaram</strong>! Por isso veio o IPv6.</p>
+            </div>
+
+            <h3>Classes de Endereços IPv4</h3>
+            <table>
+              <tr><th>Classe</th><th>Faixa</th><th>Uso</th><th>Quantidade de Hosts</th></tr>
+              <tr><td>A</td><td>1.0.0.0 — 126.255.255.255</td><td>Redes muito grandes</td><td>16 milhões</td></tr>
+              <tr><td>B</td><td>128.0.0.0 — 191.255.255.255</td><td>Redes médias</td><td>65 mil</td></tr>
+              <tr><td>C</td><td>192.0.0.0 — 223.255.255.255</td><td>Redes pequenas</td><td>254</td></tr>
+              <tr><td>D</td><td>224.0.0.0 — 239.255.255.255</td><td>Multicast</td><td>—</td></tr>
+              <tr><td>E</td><td>240.0.0.0 — 255.255.255.255</td><td>Reservada (experimental)</td><td>—</td></tr>
+            </table>
+
+            <h3>IPs Públicos vs Privados</h3>
+
+            <h3>🌐 IP Público</h3>
+            <p>Endereço único na internet inteira. Atribuído pelo seu provedor de internet (ISP).</p>
+
+            <h3>🏠 IP Privado</h3>
+            <p>Usado apenas dentro de redes locais. Não vai para a internet diretamente.</p>
+
+            <h3>Faixas Reservadas para Redes Privadas (RFC 1918)</h3>
+            <table>
+              <tr><th>Classe</th><th>Faixa</th><th>Mais Comum Em</th></tr>
+              <tr><td>A</td><td>10.0.0.0 — 10.255.255.255</td><td>Grandes empresas</td></tr>
+              <tr><td>B</td><td>172.16.0.0 — 172.31.255.255</td><td>Empresas médias</td></tr>
+              <tr><td>C</td><td>192.168.0.0 — 192.168.255.255</td><td>Casas e escritórios pequenos</td></tr>
+            </table>
+
+            <div class="info-box">
+              <h4>💡 Por Que IP Privado?</h4>
+              <p>Como acabaram os IPs públicos, surgiu o conceito de <strong>NAT</strong>:</p>
+              <p>• Sua casa tem 10 dispositivos, mas <strong>um único IP público</strong> do provedor<br>
+              • O roteador faz a "tradução" entre o IP privado interno e o IP público externo<br>
+              • Para a internet, parece que só existe um equipamento na sua casa!</p>
+            </div>
+
+            <h3>Endereços Especiais</h3>
+            <table>
+              <tr><th>Endereço</th><th>Significado</th></tr>
+              <tr><td>0.0.0.0</td><td>Endereço de "qualquer rede"</td></tr>
+              <tr><td>127.0.0.1</td><td><strong>Loopback</strong> — o próprio computador</td></tr>
+              <tr><td>255.255.255.255</td><td>Broadcast geral (todos na rede)</td></tr>
+              <tr><td>169.254.x.x</td><td>APIPA — Windows atribui quando DHCP falha</td></tr>
+            </table>
+
+            <h3>Máscara de Sub-rede</h3>
+            <div class="info-box">
+              <h4>🎭 O Que é?</h4>
+              <p>A máscara <strong>define qual parte do IP é a "rede" e qual é o "host"</strong>.</p>
+              <p>Exemplo clássico: <strong>255.255.255.0</strong></p>
+              <p>Isso significa: os primeiros 3 octetos (192.168.1) são a rede, e o último (.100) é o host.</p>
+            </div>
+
+            <h3>Notação CIDR (/24, /16, /8)</h3>
+            <p>Forma moderna de escrever a máscara — número de bits "1" da máscara:</p>
+            <table>
+              <tr><th>CIDR</th><th>Máscara</th><th>Hosts por Rede</th></tr>
+              <tr><td>/8</td><td>255.0.0.0</td><td>~16 milhões</td></tr>
+              <tr><td>/16</td><td>255.255.0.0</td><td>~65 mil</td></tr>
+              <tr><td>/24</td><td>255.255.255.0</td><td>254</td></tr>
+              <tr><td>/30</td><td>255.255.255.252</td><td>2</td></tr>
+              <tr><td>/32</td><td>255.255.255.255</td><td>1 (host específico)</td></tr>
+            </table>
+
+            <h3>Exemplo de Configuração</h3>
+            <div class="success-box">
+              <h4>📋 Rede Doméstica Típica</h4>
+              <p>• <strong>Roteador:</strong> 192.168.1.1 (gateway)<br>
+              • <strong>Máscara:</strong> 255.255.255.0 (/24)<br>
+              • <strong>PC do João:</strong> 192.168.1.10<br>
+              • <strong>Notebook da Maria:</strong> 192.168.1.20<br>
+              • <strong>Celular do Pedro:</strong> 192.168.1.30<br>
+              • <strong>Impressora:</strong> 192.168.1.50<br>
+              • <strong>DNS:</strong> 8.8.8.8 (Google) ou 1.1.1.1 (Cloudflare)</p>
+            </div>
+
+            <h3>Como Descobrir seu IP</h3>
+            <div class="info-box">
+              <h4>💻 Diferentes Sistemas</h4>
+              <p><strong>Windows:</strong> abrir CMD e digitar <code>ipconfig</code><br>
+              <strong>Linux/Mac:</strong> abrir terminal e digitar <code>ifconfig</code> ou <code>ip addr</code><br>
+              <strong>Celular:</strong> Configurações → Wi-Fi → tocar na rede conectada<br>
+              <strong>IP Público:</strong> acessar <a href="#" style="color:#1976D2">whatismyip.com</a></p>
+            </div>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Identificação de IPs</h4>
+              <p>1. Verifique seu IP no laboratório (ipconfig)<br>
+              2. Identifique se é IP público ou privado<br>
+              3. Identifique qual classe (A, B ou C)<br>
+              4. Anote o gateway, máscara e DNS<br>
+              5. Faça <strong>ping no gateway</strong> e na <strong>internet</strong><br>
+              6. Use <strong>tracert google.com</strong> e analise o caminho</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual endereço é um IP privado da classe C, comum em redes domésticas?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">8.8.8.8</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">172.217.28.78</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">192.168.1.10</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 13 — Sub-redes e Configurações",
+          tag: "Sub-redes",
+          conteudo: `
+            <h3>O Que São Sub-redes?</h3>
+            <p>Sub-redes (ou subnets) são <strong>divisões lógicas de uma rede maior em redes menores</strong>. Usadas para organização, segurança e melhor desempenho.</p>
+
+            <div class="info-box">
+              <h4>💡 Por Que Sub-redes?</h4>
+              <p>Imagine uma empresa com 100 funcionários: TI, RH, Vendas, Diretoria. Faz sentido todos estarem na MESMA rede? <strong>Não!</strong></p>
+              <p>Com sub-redes:<br>
+              • <strong>192.168.1.0/24</strong> → TI<br>
+              • <strong>192.168.2.0/24</strong> → RH<br>
+              • <strong>192.168.3.0/24</strong> → Vendas<br>
+              • <strong>192.168.4.0/24</strong> → Diretoria</p>
+              <p>Cada departamento isolado, com regras de segurança próprias.</p>
+            </div>
+
+            <h3>Componentes Essenciais de uma Configuração de Rede</h3>
+
+            <h3>1. 🎯 Endereço IP</h3>
+            <p>O "endereço" único do dispositivo na rede.</p>
+
+            <h3>2. 🎭 Máscara de Sub-rede</h3>
+            <p>Define qual parte é rede e qual é host. Vista na aula anterior.</p>
+
+            <h3>3. 🚪 Gateway Padrão</h3>
+            <div class="info-box">
+              <h4>A "Porta de Saída" da Rede</h4>
+              <p>É o IP do <strong>roteador</strong> que conecta sua rede local com outras redes (ou internet).</p>
+              <p>Sem gateway → você só fala com dispositivos da sua rede local!</p>
+            </div>
+
+            <h3>4. 🌐 Servidor DNS</h3>
+            <div class="info-box">
+              <h4>Tradutor de Nomes</h4>
+              <p>Converte nomes (google.com) em IPs (142.250.78.46).</p>
+              <p><strong>DNS públicos famosos:</strong></p>
+              <p>• <strong>8.8.8.8 e 8.8.4.4</strong> → Google<br>
+              • <strong>1.1.1.1 e 1.0.0.1</strong> → Cloudflare<br>
+              • <strong>9.9.9.9</strong> → Quad9 (com segurança)<br>
+              • <strong>208.67.222.222</strong> → OpenDNS</p>
+            </div>
+
+            <h3>DHCP — Atribuição Automática de IP 🤖</h3>
+            <div class="success-box">
+              <h4>Como Funciona</h4>
+              <p>O <strong>DHCP</strong> automatiza tudo! Quando você conecta seu celular no Wi-Fi:</p>
+              <p>1. Seu celular grita: <em>"Tem alguém aí? Preciso de IP!"</em> (DHCP Discover)<br>
+              2. O roteador responde: <em>"Aqui está, pode usar este IP"</em> (DHCP Offer)<br>
+              3. Celular aceita: <em>"Quero esse, sim!"</em> (DHCP Request)<br>
+              4. Roteador confirma: <em>"OK, é seu"</em> (DHCP ACK)</p>
+              <p>📌 Tudo em <strong>milissegundos</strong>, sem você fazer nada!</p>
+            </div>
+
+            <h3>DHCP no Roteador Doméstico</h3>
+            <p>Configurações típicas:</p>
+            <ul>
+              <li><strong>Faixa de DHCP:</strong> 192.168.1.100 a 192.168.1.200</li>
+              <li><strong>IPs fora da faixa:</strong> 192.168.1.1 a 99 (para IPs fixos)</li>
+              <li><strong>Tempo de aluguel (lease):</strong> 24 horas (comum)</li>
+            </ul>
+
+            <h3>Quando Usar IP Fixo?</h3>
+            <div class="warning-box">
+              <h4>📌 Casos Específicos</h4>
+              <p>Use <strong>IP fixo (manual)</strong> em:</p>
+              <p>• <strong>Servidores</strong> — precisam de IP estável<br>
+              • <strong>Impressoras de rede</strong> — para não mudarem<br>
+              • <strong>Câmeras IP</strong> — para acesso consistente<br>
+              • <strong>Equipamentos críticos</strong> — switches, roteadores</p>
+              <p>Use <strong>DHCP</strong> em: PCs, celulares, notebooks, dispositivos comuns.</p>
+            </div>
+
+            <h3>Configuração Prática no Windows</h3>
+
+            <h3>Modo Automático (DHCP)</h3>
+            <div class="info-box">
+              <h4>Configuração Padrão</h4>
+              <p>1. Abrir Painel de Controle → Rede e Internet<br>
+              2. Central de Rede e Compartilhamento → Adaptadores<br>
+              3. Botão direito na conexão → Propriedades<br>
+              4. Selecionar TCP/IPv4 → Propriedades<br>
+              5. Marcar:<br>
+              &nbsp;&nbsp;✅ <strong>Obter um endereço IP automaticamente</strong><br>
+              &nbsp;&nbsp;✅ <strong>Obter servidor DNS automaticamente</strong><br>
+              6. OK</p>
+            </div>
+
+            <h3>Modo Manual (IP Fixo)</h3>
+            <div class="success-box">
+              <h4>Configuração Personalizada</h4>
+              <p>Mesma tela, mas marcar <strong>"Usar o seguinte..."</strong> e preencher:</p>
+              <table>
+                <tr><th>Campo</th><th>Exemplo</th></tr>
+                <tr><td>Endereço IP</td><td>192.168.1.50</td></tr>
+                <tr><td>Máscara de sub-rede</td><td>255.255.255.0</td></tr>
+                <tr><td>Gateway padrão</td><td>192.168.1.1</td></tr>
+                <tr><td>DNS preferencial</td><td>8.8.8.8</td></tr>
+                <tr><td>DNS alternativo</td><td>1.1.1.1</td></tr>
+              </table>
+            </div>
+
+            <h3>Configuração no Linux (Ubuntu)</h3>
+            <div class="info-box">
+              <h4>Via Terminal</h4>
+            </div>
+            <div class="code">
+# Ver configuração atual
+ip addr show
+
+# Configurar IP manual temporário
+sudo ip addr add 192.168.1.50/24 dev eth0
+
+# Definir gateway
+sudo ip route add default via 192.168.1.1
+
+# Editar DNS permanentemente
+sudo nano /etc/resolv.conf
+nameserver 8.8.8.8
+            </div>
+
+            <h3>Diagnóstico de Problemas com DHCP</h3>
+            <table>
+              <tr><th>Sintoma</th><th>Causa</th></tr>
+              <tr><td>IP 169.254.x.x</td><td>Não encontrou servidor DHCP (APIPA)</td></tr>
+              <tr><td>"IP duplicado"</td><td>Dois dispositivos com mesmo IP fixo</td></tr>
+              <tr><td>Sem internet com IP OK</td><td>Gateway ou DNS errado</td></tr>
+              <tr><td>Funciona em uns, não em outros</td><td>Faixa DHCP esgotada</td></tr>
+            </table>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Configuração Completa</h4>
+              <p>Em duplas:</p>
+              <p>1. <strong>PC1:</strong> configure IP fixo 192.168.1.10<br>
+              2. <strong>PC2:</strong> configure DHCP (automático)<br>
+              3. Verifiquem qual IP o PC2 recebeu (<code>ipconfig</code>)<br>
+              4. Façam <strong>ping</strong> de um para o outro<br>
+              5. Acessem a interface do roteador<br>
+              6. Localizem a configuração de DHCP no roteador<br>
+              7. Identifiquem a faixa de IPs disponível<br>
+              8. Tirem um IP da faixa DHCP e configurem como reservado para o MAC do PC2</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Sem qual configuração um computador NÃO consegue acessar a internet (mesmo com IP local correto)?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Senha do Wi-Fi</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Gateway padrão e DNS</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Nome do computador</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 14 — Noções de IPv6",
+          tag: "IPv6",
+          conteudo: `
+            <h3>Por Que o IPv6 Existe?</h3>
+            <div class="warning-box">
+              <h4>⚠️ O Problema do IPv4</h4>
+              <p>O IPv4 só consegue endereçar <strong>4,3 bilhões</strong> de dispositivos. Hoje no mundo já temos:</p>
+              <p>• Mais de 5 bilhões de pessoas com internet<br>
+              • Bilhões de celulares e tablets<br>
+              • IoT: geladeiras, lâmpadas, carros conectados<br>
+              • <strong>Total de dispositivos conectados: mais de 50 BILHÕES</strong></p>
+              <p>Não cabe mais no IPv4!</p>
+            </div>
+
+            <h3>O Que Muda no IPv6?</h3>
+            <div class="success-box">
+              <h4>📋 Comparação Direta</h4>
+              <table>
+                <tr><th>Característica</th><th>IPv4</th><th>IPv6</th></tr>
+                <tr><td>Tamanho</td><td>32 bits</td><td>128 bits</td></tr>
+                <tr><td>Endereços possíveis</td><td>4,3 bilhões</td><td>340 undecilhões (3,4 × 10³⁸)</td></tr>
+                <tr><td>Formato</td><td>Decimal</td><td>Hexadecimal</td></tr>
+                <tr><td>Separador</td><td>Ponto (.)</td><td>Dois-pontos (:)</td></tr>
+                <tr><td>Exemplo</td><td>192.168.1.1</td><td>2001:db8::1</td></tr>
+                <tr><td>Cabeçalho</td><td>20 bytes</td><td>40 bytes (mais simples)</td></tr>
+                <tr><td>NAT</td><td>Necessário</td><td>Desnecessário</td></tr>
+              </table>
+            </div>
+
+            <h3>Quantos Endereços São?</h3>
+            <div class="info-box">
+              <h4>🤯 Números Astronômicos</h4>
+              <p>Com 128 bits, temos <strong>2¹²⁸ ≈ 340 undecilhões</strong> de endereços.</p>
+              <p>Para você ter ideia: dá para atribuir <strong>667 quatrilhões</strong> de IPs <strong>para cada milímetro quadrado da superfície da Terra</strong>!</p>
+              <p>📌 Não vai acabar tão cedo... 😄</p>
+            </div>
+
+            <h3>Estrutura do Endereço IPv6</h3>
+            <p>Composto por <strong>8 grupos de 4 dígitos hexadecimais</strong>, separados por dois-pontos (:):</p>
+            <div class="code">
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+            </div>
+
+            <h3>Regras de Simplificação</h3>
+
+            <h3>Regra 1: Omitir zeros à esquerda</h3>
+            <div class="code">
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+↓
+2001:db8:85a3:0:0:8a2e:370:7334
+            </div>
+
+            <h3>Regra 2: Substituir sequência de zeros por ::</h3>
+            <div class="code">
+2001:db8:85a3:0:0:8a2e:370:7334
+↓
+2001:db8:85a3::8a2e:370:7334
+            </div>
+
+            <div class="warning-box">
+              <h4>⚠️ Atenção!</h4>
+              <p>O <strong>::</strong> só pode ser usado <strong>UMA vez</strong> no endereço (para não criar ambiguidade).</p>
+            </div>
+
+            <h3>Exemplos de Endereços Especiais IPv6</h3>
+            <table>
+              <tr><th>Endereço</th><th>Significado</th></tr>
+              <tr><td>::1</td><td>Loopback (equivalente a 127.0.0.1)</td></tr>
+              <tr><td>::</td><td>Endereço não especificado (equivalente a 0.0.0.0)</td></tr>
+              <tr><td>fe80::/10</td><td>Link-local (atribuído automaticamente)</td></tr>
+              <tr><td>fc00::/7</td><td>Endereços únicos locais (privados)</td></tr>
+              <tr><td>2000::/3</td><td>Endereços globais (públicos, roteáveis)</td></tr>
+              <tr><td>ff00::/8</td><td>Multicast</td></tr>
+            </table>
+
+            <h3>Vantagens do IPv6</h3>
+            <div class="cards">
+              <div class="card"><h4>♾️ Endereços infinitos</h4><p>Para todos os dispositivos do planeta e além!</p></div>
+              <div class="card"><h4>🚀 Performance</h4><p>Cabeçalho simplificado, processamento mais rápido pelos roteadores.</p></div>
+              <div class="card"><h4>🔒 Segurança Nativa</h4><p>IPsec obrigatório (criptografia ponto a ponto).</p></div>
+              <div class="card"><h4>🤖 Autoconfiguração</h4><p>SLAAC — dispositivos configuram IP sozinhos, sem DHCP.</p></div>
+              <div class="card"><h4>🌐 Sem NAT</h4><p>Cada dispositivo pode ter IP público real.</p></div>
+              <div class="card"><h4>📱 IoT pronto</h4><p>Suporta facilmente o futuro da Internet das Coisas.</p></div>
+            </div>
+
+            <h3>Coexistência IPv4/IPv6</h3>
+            <div class="info-box">
+              <h4>🔄 Estratégias de Transição</h4>
+              <p>A migração total leva tempo. Hoje os dois coexistem com:</p>
+              <p>• <strong>Dual Stack:</strong> dispositivo usa IPv4 E IPv6 simultaneamente<br>
+              • <strong>Tunelamento:</strong> pacotes IPv6 "embrulhados" em IPv4 para atravessar redes antigas<br>
+              • <strong>Tradução:</strong> conversão IPv4 ↔ IPv6 (NAT64)</p>
+            </div>
+
+            <h3>Adoção do IPv6 no Brasil 🇧🇷</h3>
+            <div class="success-box">
+              <h4>📊 Estatísticas</h4>
+              <p>O Brasil é um dos <strong>líderes mundiais em adoção de IPv6</strong>:</p>
+              <p>• Mais de <strong>40% do tráfego brasileiro</strong> já é IPv6<br>
+              • Principais provedores (Vivo, Claro, Tim) suportam<br>
+              • NIC.br incentiva a adoção</p>
+              <p>Você pode verificar no <strong>test-ipv6.com</strong> se sua conexão tem IPv6!</p>
+            </div>
+
+            <h3>Como Verificar IPv6 no Seu Computador</h3>
+            <div class="info-box">
+              <h4>💻 Comandos</h4>
+            </div>
+            <div class="code">
+# Windows
+ipconfig
+
+# Linux/Mac
+ifconfig
+ip -6 addr show
+
+# Testar conectividade IPv6
+ping -6 google.com
+
+# Sites para testar
+http://test-ipv6.com
+http://ipv6-test.com
+            </div>
+
+            <h3>O Que o Profissional Precisa Saber</h3>
+            <div class="info-box">
+              <h4>📝 Pontos-Chave</h4>
+              <p>✅ Entender que IPv6 <strong>já é realidade</strong> e não pode ser ignorado<br>
+              ✅ Saber identificar um endereço IPv6 vs IPv4<br>
+              ✅ Conhecer as regras básicas de simplificação<br>
+              ✅ Compreender as vantagens<br>
+              ✅ Saber que IPv4 e IPv6 podem coexistir (dual stack)<br>
+              ✅ Saber configurar e testar conectividade básica</p>
+            </div>
+
+            <h3>Atividade Prática 🔬</h3>
+            <div class="success-box">
+              <h4>Exploração de IPv6</h4>
+              <p>1. Verifique o endereço IPv6 do seu PC<br>
+              2. Identifique se é link-local (fe80::) ou global<br>
+              3. Acesse <strong>test-ipv6.com</strong> e veja seu score<br>
+              4. Tente um <strong>ping -6 google.com</strong><br>
+              5. Compare: seu IP IPv4 e IPv6 fazem o que cada um?<br>
+              6. Em grupos, discuta: por que sua conexão usa um ou outro?</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual o tamanho de um endereço IPv6?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">32 bits</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">64 bits</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">128 bits</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO VI — Redes Sem Fio",
+      aulas: [
+        {
+          titulo: "Aula 15 — Fundamentos de Wi-Fi",
+          tag: "Wi-Fi",
+          conteudo: `
+            <h3>O Que é Wi-Fi?</h3>
+            <p><strong>Wi-Fi</strong> (Wireless Fidelity) é uma tecnologia de <strong>rede sem fio</strong> baseada no padrão <strong>IEEE 802.11</strong>. Permite que dispositivos se conectem à rede sem precisar de cabos.</p>
+
+            <div class="info-box">
+              <h4>📜 Curiosidade</h4>
+              <p>O termo "Wi-Fi" foi criado pela Wi-Fi Alliance em 1999 para soar parecido com "Hi-Fi" (alta fidelidade de áudio). Não significa "Wireless Fidelity" oficialmente!</p>
+            </div>
+
+            <h3>Evolução dos Padrões IEEE 802.11</h3>
+            <table>
+              <tr><th>Padrão</th><th>Nome Comercial</th><th>Ano</th><th>Velocidade Máx</th><th>Frequência</th></tr>
+              <tr><td>802.11a</td><td>—</td><td>1999</td><td>54 Mbps</td><td>5 GHz</td></tr>
+              <tr><td>802.11b</td><td>—</td><td>1999</td><td>11 Mbps</td><td>2,4 GHz</td></tr>
+              <tr><td>802.11g</td><td>—</td><td>2003</td><td>54 Mbps</td><td>2,4 GHz</td></tr>
+              <tr><td>802.11n</td><td>Wi-Fi 4</td><td>2009</td><td>600 Mbps</td><td>2,4 / 5 GHz</td></tr>
+              <tr><td>802.11ac</td><td>Wi-Fi 5</td><td>2014</td><td>3,5 Gbps</td><td>5 GHz</td></tr>
+              <tr><td>802.11ax</td><td><strong>Wi-Fi 6/6E</strong></td><td>2019</td><td>9,6 Gbps</td><td>2,4 / 5 / 6 GHz</td></tr>
+              <tr><td>802.11be</td><td>Wi-Fi 7</td><td>2024</td><td>46 Gbps</td><td>2,4 / 5 / 6 GHz</td></tr>
+            </table>
+
+            <h3>2,4 GHz vs 5 GHz vs 6 GHz</h3>
+            <div class="cards">
+              <div class="card"><h4>📡 2,4 GHz</h4><p>✅ Maior alcance<br>✅ Atravessa paredes melhor<br>❌ Mais lenta<br>❌ Muita interferência<br>📌 Bom para: dispositivos longe do roteador</p></div>
+              <div class="card"><h4>📡 5 GHz</h4><p>✅ Muito mais rápida<br>✅ Menos interferência<br>❌ Alcance menor<br>❌ Não atravessa paredes tão bem<br>📌 Bom para: streaming, jogos</p></div>
+              <div class="card"><h4>📡 6 GHz</h4><p>✅ Ainda mais rápida<br>✅ Sem interferências (novo espectro)<br>❌ Alcance ainda menor<br>❌ Poucos dispositivos compatíveis<br>📌 Bom para: redes futuras</p></div>
+            </div>
+
+            <h3>Conceitos Fundamentais</h3>
+
+            <h3>SSID — Service Set Identifier</h3>
+            <p>É o <strong>nome da rede Wi-Fi</strong> que aparece para conectar. Ex: "Casa_da_Maria", "Empresa_XYZ", "NET_4G".</p>
+
+            <h3>BSSID — Basic Service Set Identifier</h3>
+            <p>É o <strong>endereço MAC do access point</strong>. Cada AP tem um BSSID único.</p>
+
+            <h3>Canais Wi-Fi 📻</h3>
+            <div class="info-box">
+              <h4>Como Funcionam?</h4>
+              <p>A frequência 2,4 GHz é dividida em <strong>14 canais</strong> (no Brasil, usamos 1 a 13).</p>
+              <p>O problema: muitos canais <strong>se sobrepõem</strong>!</p>
+              <p>📌 Canais não-sobrepostos em 2,4 GHz: <strong>1, 6 e 11</strong></p>
+              <p>Em 5 GHz, há <strong>23 canais não-sobrepostos</strong> — muito melhor!</p>
+            </div>
+
+            <h3>Largura de Banda do Canal</h3>
+            <table>
+              <tr><th>Largura</th><th>Velocidade</th><th>Trade-off</th></tr>
+              <tr><td>20 MHz</td><td>Menor</td><td>Mais estável, menos interferência</td></tr>
+              <tr><td>40 MHz</td><td>Média</td><td>Equilibrado</td></tr>
+              <tr><td>80 MHz</td><td>Alta</td><td>Boa para 5 GHz</td></tr>
+              <tr><td>160 MHz</td><td>Máxima</td><td>Requer ambiente limpo</td></tr>
+            </table>
+
+            <h3>Alcance e Interferências</h3>
+            <div class="warning-box">
+              <h4>⚠️ O Que Pode Atrapalhar o Wi-Fi</h4>
+              <p>• <strong>Paredes grossas</strong> de concreto ou alvenaria<br>
+              • <strong>Espelhos e vidros</strong><br>
+              • <strong>Eletrodomésticos:</strong> micro-ondas, telefones sem fio<br>
+              • <strong>Outras redes Wi-Fi</strong> no mesmo canal<br>
+              • <strong>Bluetooth</strong> e babá eletrônica<br>
+              • <strong>Aquários</strong> (a água atrapalha!)<br>
+              • <strong>Distância</strong> excessiva do roteador</p>
+            </div>
+
+            <h3>Como Medir a Qualidade do Sinal</h3>
+            <table>
+              <tr><th>RSSI (dBm)</th><th>Qualidade</th><th>Desempenho</th></tr>
+              <tr><td>-30 a -50</td><td>🟢 Excelente</td><td>Velocidade máxima</td></tr>
+              <tr><td>-51 a -67</td><td>🟢 Muito Bom</td><td>Streaming 4K, jogos</td></tr>
+              <tr><td>-68 a -70</td><td>🟡 Bom</td><td>Navegação fluida</td></tr>
+              <tr><td>-71 a -80</td><td>🟠 Fraco</td><td>Lentidão em apps pesados</td></tr>
+              <tr><td>-81 a -90</td><td>🔴 Muito Fraco</td><td>Apenas conexão básica</td></tr>
+              <tr><td>Abaixo de -90</td><td>🔴 Inutilizável</td><td>Não conecta</td></tr>
+            </table>
+
+            <h3>Aplicativos Úteis 📱</h3>
+            <div class="cards">
+              <div class="card"><h4>📊 WiFi Analyzer</h4><p>Mostra todas as redes Wi-Fi próximas e em que canal cada uma está. Para Android.</p></div>
+              <div class="card"><h4>📡 inSSIDer</h4><p>Mesma função para Windows e Mac. Mais profissional.</p></div>
+              <div class="card"><h4>🌡️ NetSpot</h4><p>Cria mapas de calor (heatmaps) do Wi-Fi no ambiente.</p></div>
+              <div class="card"><h4>⚡ Fast.com / Speedtest</h4><p>Mede a velocidade real da conexão.</p></div>
+            </div>
+
+            <h3>Wi-Fi Mesh — A Tecnologia Moderna</h3>
+            <div class="success-box">
+              <h4>🌐 Sem Pontos Cegos!</h4>
+              <p>Sistema com <strong>vários access points</strong> que trabalham juntos, criando uma única rede contínua.</p>
+              <p>✅ Cobertura sem interrupções<br>
+              ✅ Roaming transparente entre APs<br>
+              ✅ Um único SSID para toda a casa<br>
+              ❌ Mais caro que um roteador simples</p>
+              <p>📦 Marcas: Google Nest WiFi, TP-Link Deco, Mercusys Halo, Asus ZenWiFi</p>
+            </div>
+
+            <h3>MIMO e MU-MIMO</h3>
+            <div class="info-box">
+              <h4>📡 Múltiplas Antenas</h4>
+              <p><strong>MIMO:</strong> Multiple Input Multiple Output — o roteador usa várias antenas simultaneamente.</p>
+              <p><strong>MU-MIMO:</strong> Multi-User MIMO — atende múltiplos dispositivos ao mesmo tempo, sem fila.</p>
+              <p>É por isso que roteadores modernos têm 4, 6 ou 8 antenas!</p>
+            </div>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Análise de Wi-Fi</h4>
+              <p>Em duplas, usando aplicativo Wi-Fi Analyzer:</p>
+              <p>1. Identifiquem quantas redes Wi-Fi existem no local<br>
+              2. Verifiquem em qual canal cada uma está<br>
+              3. Identifiquem se há sobreposição de canais<br>
+              4. Sugiram um canal melhor para nossa rede do laboratório<br>
+              5. Medam a intensidade do sinal em vários pontos do espaço<br>
+              6. Façam um pequeno mapa indicando áreas com sinal forte/fraco</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Quais são os canais que NÃO se sobrepõem em 2,4 GHz?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">1, 2, 3</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">1, 6, 11</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">2, 7, 12</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 16 — Configuração de Rede Wireless",
+          tag: "Configuração Wi-Fi",
+          conteudo: `
+            <h3>Configurando um Roteador Wi-Fi Doméstico</h3>
+            <p>Vamos aprender, passo a passo, como configurar uma rede Wi-Fi do zero — algo que <strong>todo técnico precisa saber fazer</strong>!</p>
+
+            <h3>Etapa 1: Acessando o Roteador</h3>
+            <div class="info-box">
+              <h4>🔐 Primeiro Acesso</h4>
+              <p>1. Conecte o computador via <strong>cabo</strong> ao roteador (porta LAN)<br>
+              2. Abra o navegador<br>
+              3. Digite o IP do roteador na barra de endereço:<br>
+              &nbsp;&nbsp;• <strong>192.168.0.1</strong> (TP-Link, D-Link)<br>
+              &nbsp;&nbsp;• <strong>192.168.1.1</strong> (Cisco, Mikrotik, Intelbras)<br>
+              &nbsp;&nbsp;• <strong>192.168.100.1</strong> (alguns provedores)<br>
+              4. Login padrão geralmente é:<br>
+              &nbsp;&nbsp;• Usuário: <strong>admin</strong><br>
+              &nbsp;&nbsp;• Senha: <strong>admin</strong> ou em branco</p>
+            </div>
+
+            <div class="warning-box">
+              <h4>⚠️ Atenção!</h4>
+              <p>A senha padrão é <strong>conhecida por qualquer um</strong>! TROQUE imediatamente após o primeiro acesso.</p>
+            </div>
+
+            <h3>Etapa 2: Configurações Básicas Essenciais</h3>
+
+            <h3>2.1 — Alterar Senha Administrativa</h3>
+            <p>Vá em "Configurações do Sistema" ou "Administration" → "Password" e troque para algo forte.</p>
+
+            <h3>2.2 — Configurar Wi-Fi (SSID e Senha)</h3>
+            <div class="success-box">
+              <h4>📋 Procedimento</h4>
+              <p>1. Localize "Wireless" ou "Sem Fio" no menu<br>
+              2. Configure o <strong>SSID</strong> (nome da rede)<br>
+              &nbsp;&nbsp;✅ Escolha um nome que identifique a rede<br>
+              &nbsp;&nbsp;❌ NÃO use dados pessoais (CPF, telefone)<br>
+              3. Escolha o <strong>tipo de segurança</strong>: <strong>WPA2-PSK</strong> ou <strong>WPA3-PSK</strong><br>
+              4. Defina uma <strong>senha forte</strong> (mínimo 10 caracteres):<br>
+              &nbsp;&nbsp;✅ Misture letras maiúsculas, minúsculas, números e símbolos<br>
+              &nbsp;&nbsp;❌ Não use nomes, datas de aniversário, "12345678"<br>
+              5. Salve as configurações</p>
+            </div>
+
+            <h3>2.3 — Configurar Banda Dupla (2,4 e 5 GHz)</h3>
+            <div class="info-box">
+              <h4>Estratégias</h4>
+              <p>Roteadores modernos têm <strong>duas bandas</strong>. Você pode:</p>
+              <p><strong>Opção 1 — Mesmo SSID:</strong> "MinhaRede" para ambas, o celular escolhe a melhor automaticamente.<br>
+              <strong>Opção 2 — SSIDs separados:</strong> "MinhaRede_2G" e "MinhaRede_5G" — você escolhe manualmente.</p>
+              <p>📌 A maioria dos especialistas prefere a <strong>Opção 2</strong> para controle total.</p>
+            </div>
+
+            <h3>Padrões de Segurança Wi-Fi</h3>
+            <table>
+              <tr><th>Padrão</th><th>Ano</th><th>Segurança</th><th>Status</th></tr>
+              <tr><td><strong>WEP</strong></td><td>1997</td><td>🔴 Quebrável em minutos</td><td>❌ NUNCA usar</td></tr>
+              <tr><td><strong>WPA</strong></td><td>2003</td><td>🟠 Vulnerável</td><td>❌ Não recomendado</td></tr>
+              <tr><td><strong>WPA2-PSK</strong></td><td>2004</td><td>🟢 Bom</td><td>✅ Mínimo aceitável</td></tr>
+              <tr><td><strong>WPA2-Enterprise</strong></td><td>2004</td><td>🟢 Muito Bom</td><td>✅ Para empresas</td></tr>
+              <tr><td><strong>WPA3-PSK</strong></td><td>2018</td><td>🟢 Excelente</td><td>✅ Recomendado</td></tr>
+              <tr><td><strong>WPA3-Enterprise</strong></td><td>2018</td><td>🟢 Top</td><td>✅ Máxima segurança</td></tr>
+            </table>
+
+            <h3>Etapa 3: Configurações Avançadas</h3>
+
+            <h3>3.1 — Escolher o Melhor Canal</h3>
+            <div class="success-box">
+              <h4>Tira a Lentidão!</h4>
+              <p>1. Use Wi-Fi Analyzer para ver canais ocupados<br>
+              2. Em 2,4 GHz, escolha entre 1, 6 ou 11 (o menos congestionado)<br>
+              3. Em 5 GHz, escolha qualquer canal disponível (geralmente é "Auto")<br>
+              4. Defina largura: 20 MHz (2,4) e 80 MHz (5)</p>
+            </div>
+
+            <h3>3.2 — Controle de Acesso (MAC Filter)</h3>
+            <p>Permite que <strong>apenas dispositivos pré-aprovados</strong> conectem.</p>
+            <ul>
+              <li>✅ Camada extra de segurança</li>
+              <li>❌ Trabalhoso (precisa cadastrar cada dispositivo novo)</li>
+            </ul>
+
+            <h3>3.3 — Esconder o SSID</h3>
+            <div class="info-box">
+              <h4>🥷 Mito ou Verdade?</h4>
+              <p>Esconder o SSID faz com que sua rede <strong>não apareça</strong> na lista de redes disponíveis.</p>
+              <p>⚠️ <strong>Segurança ilusória:</strong> hackers experientes conseguem ver mesmo assim. Use junto com WPA3 e senha forte.</p>
+            </div>
+
+            <h3>3.4 — Rede de Convidados (Guest Network)</h3>
+            <div class="success-box">
+              <h4>Inteligente!</h4>
+              <p>Crie uma <strong>rede separada</strong> para visitas. Vantagens:</p>
+              <p>✅ Visitas têm internet<br>
+              ✅ Não acessam seus arquivos<br>
+              ✅ Pode ter velocidade limitada<br>
+              ✅ Senha pode ser trocada toda semana</p>
+            </div>
+
+            <h3>3.5 — QoS (Quality of Service)</h3>
+            <p>Permite <strong>priorizar tráfego</strong>. Exemplo: dar prioridade para a videochamada de trabalho sobre downloads.</p>
+
+            <h3>3.6 — Atualização de Firmware</h3>
+            <div class="warning-box">
+              <h4>🔒 Crítico para Segurança</h4>
+              <p>Mantenha o roteador sempre atualizado:</p>
+              <p>1. Vá em "System Update" ou "Firmware"<br>
+              2. Verifique se há atualização<br>
+              3. Baixe e instale<br>
+              4. NÃO desligue durante a atualização!<br>
+              5. Repita a cada 3-6 meses</p>
+            </div>
+
+            <h3>Roteiro de Instalação Profissional</h3>
+            <div class="info-box">
+              <h4>📋 Checklist do Técnico</h4>
+              <p>☐ Posicionar o roteador no <strong>centro do ambiente</strong>, elevado<br>
+              ☐ Afastar de eletrodomésticos e objetos metálicos<br>
+              ☐ Conectar à internet (cabo da operadora)<br>
+              ☐ Acessar interface de configuração<br>
+              ☐ Trocar senha de administração<br>
+              ☐ Configurar SSID e senha Wi-Fi (WPA3 ou WPA2-PSK)<br>
+              ☐ Configurar 2,4 GHz e 5 GHz<br>
+              ☐ Escolher canais menos congestionados<br>
+              ☐ Habilitar firewall<br>
+              ☐ Criar rede de convidados<br>
+              ☐ Atualizar firmware<br>
+              ☐ Testar velocidade em vários pontos<br>
+              ☐ Anotar e entregar configurações ao cliente</p>
+            </div>
+
+            <h3>Conectando Dispositivos</h3>
+            <table>
+              <tr><th>Dispositivo</th><th>Como Conectar</th></tr>
+              <tr><td>Celular Android</td><td>Configurações → Wi-Fi → Selecionar rede → Digitar senha</td></tr>
+              <tr><td>iPhone</td><td>Ajustes → Wi-Fi → Escolher rede → Digitar senha</td></tr>
+              <tr><td>Notebook Windows</td><td>Ícone Wi-Fi no canto → Rede → Conectar → Senha</td></tr>
+              <tr><td>Smart TV</td><td>Menu → Rede → Wireless → Rede → Senha (controle remoto)</td></tr>
+              <tr><td>WPS</td><td>Pressionar WPS no roteador → no dispositivo aceitar conexão</td></tr>
+            </table>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Configuração Completa</h4>
+              <p>Em duplas, no laboratório, configurem do zero um roteador:</p>
+              <p>1. Reset de fábrica<br>
+              2. Configuração de senha de administração<br>
+              3. SSID personalizado (ex: "TURMA1_GRUPO_A")<br>
+              4. Segurança WPA2 ou WPA3<br>
+              5. Senha forte<br>
+              6. Atribuir IP fixo do roteador (192.168.10.1)<br>
+              7. Conectar 2 dispositivos<br>
+              8. Testar acesso à internet<br>
+              9. Apresentar configuração para o instrutor</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual padrão de segurança Wi-Fi NUNCA deve mais ser usado?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">WEP</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">WPA2</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">WPA3</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO VII — Compartilhamento e Serviços",
+      aulas: [
+        {
+          titulo: "Aula 17 — Compartilhamento de Recursos",
+          tag: "Compartilhamento",
+          conteudo: `
+            <h3>Por Que Compartilhar?</h3>
+            <p>Uma das principais razões para criar redes é o <strong>compartilhamento de recursos</strong>: arquivos, impressoras, internet, aplicativos. Vamos aprender como fazer isso na prática!</p>
+
+            <h3>Grupo de Trabalho vs Domínio</h3>
+            <div class="cards">
+              <div class="card"><h4>👥 Grupo de Trabalho (Workgroup)</h4><p>Modelo simples, descentralizado. Cada computador gerencia seus próprios usuários e permissões. <strong>Usado em casa e escritórios pequenos.</strong></p></div>
+              <div class="card"><h4>🏢 Domínio (Domain)</h4><p>Modelo corporativo. Servidor central (Active Directory) controla todos os usuários e permissões. <strong>Usado em empresas médias e grandes.</strong></p></div>
+            </div>
+
+            <h3>Compartilhamento de Pastas no Windows</h3>
+
+            <h3>Passo 1: Habilitar Compartilhamento</h3>
+            <div class="info-box">
+              <h4>📋 Configurações Iniciais</h4>
+              <p>1. Painel de Controle → Rede e Internet → Central de Rede e Compartilhamento<br>
+              2. Clique em <strong>"Alterar configurações de compartilhamento avançadas"</strong><br>
+              3. Em "Privado":<br>
+              &nbsp;&nbsp;✅ Ativar descoberta de rede<br>
+              &nbsp;&nbsp;✅ Ativar compartilhamento de arquivos e impressoras<br>
+              4. Em "Todas as redes":<br>
+              &nbsp;&nbsp;⚠️ Decidir sobre proteção por senha (recomendado SIM)</p>
+            </div>
+
+            <h3>Passo 2: Compartilhar uma Pasta</h3>
+            <div class="success-box">
+              <h4>📂 Procedimento</h4>
+              <p>1. Clique com botão direito na pasta desejada<br>
+              2. Selecione <strong>Propriedades</strong><br>
+              3. Aba <strong>Compartilhamento</strong> → Compartilhamento Avançado<br>
+              4. Marque "Compartilhar esta pasta"<br>
+              5. Defina o <strong>nome do compartilhamento</strong> (pode usar $ no final para esconder)<br>
+              6. Clique em <strong>Permissões</strong><br>
+              7. Defina quem pode acessar e o nível:<br>
+              &nbsp;&nbsp;• <strong>Leitura:</strong> só pode ver/abrir arquivos<br>
+              &nbsp;&nbsp;• <strong>Alteração:</strong> pode modificar arquivos<br>
+              &nbsp;&nbsp;• <strong>Controle Total:</strong> pode tudo (incluindo apagar)<br>
+              8. Aplicar → OK</p>
+            </div>
+
+            <h3>Acessando Pastas Compartilhadas</h3>
+            <div class="info-box">
+              <h4>💻 Vários Caminhos</h4>
+              <p><strong>Método 1 — Pelo Explorer:</strong><br>
+              1. Abra o Explorer de Arquivos<br>
+              2. Clique em "Rede" no menu lateral<br>
+              3. Veja os computadores disponíveis<br>
+              4. Clique no PC e nas pastas compartilhadas</p>
+              <p><strong>Método 2 — Pelo nome ou IP:</strong><br>
+              1. Pressione <strong>Windows + R</strong><br>
+              2. Digite <strong>\\\\NOME-DO-PC</strong> ou <strong>\\\\192.168.1.10</strong><br>
+              3. Pressione Enter<br>
+              4. Forneça usuário/senha se solicitado</p>
+            </div>
+
+            <h3>Mapear Unidade de Rede</h3>
+            <div class="success-box">
+              <h4>📁 Atalho Permanente</h4>
+              <p>Permite que uma pasta de rede apareça como um <strong>"disco" no seu computador</strong> (ex: drive Z:).</p>
+              <p>1. Abra Explorer → Clique em "Este Computador"<br>
+              2. Aba <strong>Computador</strong> → "Mapear Unidade de Rede"<br>
+              3. Escolha uma letra (ex: Z:)<br>
+              4. Digite o caminho: <strong>\\\\PC-SERVIDOR\\Documentos</strong><br>
+              5. Marque "Reconectar na entrada"<br>
+              6. Finalize com usuário/senha</p>
+            </div>
+
+            <h3>Permissões: NTFS vs Compartilhamento</h3>
+            <div class="warning-box">
+              <h4>⚠️ Conceito Avançado, mas Importante!</h4>
+              <p>Existem <strong>dois níveis de permissão</strong>:</p>
+              <p><strong>1. Permissões de Compartilhamento:</strong> definem o que pode ser feito ao acessar pela REDE.<br>
+              <strong>2. Permissões NTFS:</strong> definem o que pode ser feito no nível do arquivo/pasta.</p>
+              <p>📌 <strong>Regra:</strong> A permissão final é a <strong>mais restritiva</strong> entre as duas.</p>
+            </div>
+
+            <h3>Compartilhamento no Linux (SAMBA)</h3>
+            <p>Para compartilhar entre Linux e Windows, usamos o <strong>Samba</strong>.</p>
+            <div class="code">
+# Instalar Samba
+sudo apt install samba
+
+# Editar configuração
+sudo nano /etc/samba/smb.conf
+
+# Adicionar no final:
+[Compartilhada]
+   path = /home/usuario/Compartilhada
+   browseable = yes
+   read only = no
+   guest ok = yes
+
+# Reiniciar serviço
+sudo systemctl restart smbd
+            </div>
+
+            <h3>OneDrive, Google Drive e Alternativas em Nuvem ☁️</h3>
+            <div class="cards">
+              <div class="card"><h4>☁️ OneDrive</h4><p>Microsoft. 5GB grátis. Integrado ao Windows.</p></div>
+              <div class="card"><h4>☁️ Google Drive</h4><p>Google. 15GB grátis. Excelente para colaboração.</p></div>
+              <div class="card"><h4>☁️ Dropbox</h4><p>Pioneiro. 2GB grátis. Bom para sincronização.</p></div>
+              <div class="card"><h4>☁️ Mega</h4><p>20GB grátis. Foco em criptografia.</p></div>
+            </div>
+
+            <h3>Solução de Problemas Comuns</h3>
+            <table>
+              <tr><th>Problema</th><th>Solução</th></tr>
+              <tr><td>"Não foi possível acessar..."</td><td>Verificar firewall e descoberta de rede</td></tr>
+              <tr><td>Pede usuário/senha sempre</td><td>Marcar "lembrar credenciais"</td></tr>
+              <tr><td>Pasta não aparece na rede</td><td>Verificar perfil "Privado" da rede</td></tr>
+              <tr><td>Acesso negado</td><td>Conferir permissões NTFS e de compartilhamento</td></tr>
+              <tr><td>Lentidão na cópia</td><td>Cabo de rede ou Wi-Fi fraco</td></tr>
+            </table>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Compartilhamento Entre PCs</h4>
+              <p>Em duplas:</p>
+              <p>1. <strong>PC1:</strong> criar pasta "Compartilhado_Aula"<br>
+              2. <strong>PC1:</strong> compartilhar com permissão de leitura/alteração<br>
+              3. <strong>PC2:</strong> acessar a pasta pelo nome do PC1<br>
+              4. <strong>PC2:</strong> mapear como unidade Z:<br>
+              5. Trocar arquivos entre os PCs<br>
+              6. Testar diferenças entre permissão "Leitura" e "Controle Total"<br>
+              7. Apresentar para o instrutor</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual permissão de compartilhamento permite que o usuário apenas abra e veja arquivos, sem modificar?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Leitura</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Alteração</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Controle Total</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 18 — Impressoras e Nuvem",
+          tag: "Recursos",
+          conteudo: `
+            <h3>Compartilhamento de Impressoras 🖨️</h3>
+            <p>Em vez de cada PC ter sua própria impressora, podemos <strong>compartilhar uma única impressora</strong> para todo o escritório!</p>
+
+            <h3>Tipos de Conexão de Impressora</h3>
+            <div class="cards">
+              <div class="card"><h4>🔌 USB</h4><p>Conectada direto a um PC e compartilhada via rede. Mais simples, mas se o PC desligar, ninguém imprime.</p></div>
+              <div class="card"><h4>🌐 Rede (Ethernet)</h4><p>Impressora com cabo de rede próprio e IP. Acessível por todos.</p></div>
+              <div class="card"><h4>📡 Wi-Fi</h4><p>Conecta sem fio à rede. Ideal para escritórios modernos.</p></div>
+              <div class="card"><h4>☁️ Cloud (AirPrint, Google Cloud Print)</h4><p>Imprime de qualquer lugar do mundo.</p></div>
+            </div>
+
+            <h3>Compartilhando Impressora USB no Windows</h3>
+            <div class="info-box">
+              <h4>📋 Procedimento</h4>
+              <p>1. Instale a impressora normalmente no PC1<br>
+              2. Painel de Controle → Dispositivos e Impressoras<br>
+              3. Clique com botão direito na impressora → <strong>Propriedades da Impressora</strong><br>
+              4. Aba <strong>Compartilhamento</strong><br>
+              5. Marque "Compartilhar esta impressora"<br>
+              6. Defina um <strong>nome de compartilhamento</strong> (ex: "HP_Recepcao")<br>
+              7. Aplicar → OK</p>
+            </div>
+
+            <h3>Acessando Impressora Compartilhada</h3>
+            <div class="success-box">
+              <h4>💻 No PC2 (que vai usar a impressora)</h4>
+              <p>1. Painel de Controle → Dispositivos e Impressoras<br>
+              2. <strong>Adicionar Impressora</strong><br>
+              3. "A impressora desejada não está na lista"<br>
+              4. <strong>Selecionar impressora compartilhada pelo nome</strong><br>
+              5. Digite: <strong>\\\\PC1\\HP_Recepcao</strong><br>
+              6. Avançar → o Windows baixa o driver automaticamente<br>
+              7. Testar com uma página de teste</p>
+            </div>
+
+            <h3>Configurando Impressora de Rede</h3>
+            <div class="info-box">
+              <h4>🌐 Mais Profissional</h4>
+              <p>Impressoras modernas têm porta Ethernet ou Wi-Fi próprios.</p>
+              <p>1. Conecte a impressora à rede<br>
+              2. Configure um <strong>IP fixo</strong> nela (geralmente pelo display do equipamento)<br>
+              3. Anote o IP (ex: 192.168.1.200)<br>
+              4. Em cada PC: Adicionar Impressora → TCP/IP → Digite o IP<br>
+              5. Windows detecta o modelo e instala drivers<br>
+              6. Pronto! Cada PC fala direto com a impressora</p>
+            </div>
+
+            <h3>Comparativo: USB vs Rede</h3>
+            <table>
+              <tr><th>Característica</th><th>Compartilhada via PC (USB)</th><th>Em Rede (IP próprio)</th></tr>
+              <tr><td>Custo da impressora</td><td>Mais barata</td><td>Mais cara</td></tr>
+              <tr><td>Necessita PC ligado</td><td>SIM</td><td>NÃO</td></tr>
+              <tr><td>Configuração</td><td>Simples</td><td>Mais complexa</td></tr>
+              <tr><td>Velocidade</td><td>Limitada pelo PC</td><td>Máxima</td></tr>
+              <tr><td>Manutenção</td><td>Mais problemas</td><td>Mais estável</td></tr>
+              <tr><td>Indicado para</td><td>1-3 usuários</td><td>Mais de 3 usuários</td></tr>
+            </table>
+
+            <h3>Impressão Mobile 📱</h3>
+            <div class="cards">
+              <div class="card"><h4>🍎 AirPrint</h4><p>Padrão da Apple. iPhone/iPad detecta automaticamente impressoras AirPrint.</p></div>
+              <div class="card"><h4>🤖 Mopria</h4><p>Equivalente Android. Funciona com a maioria das marcas.</p></div>
+              <div class="card"><h4>📱 Aplicativos</h4><p>HP Smart, Epson iPrint, Canon PRINT — para controle avançado.</p></div>
+            </div>
+
+            <h3>Armazenamento em Nuvem ☁️</h3>
+            <p>Conceito moderno e essencial: seus arquivos ficam <strong>nos servidores de uma empresa</strong> (Google, Microsoft, etc.) acessíveis de qualquer lugar do mundo.</p>
+
+            <h3>Principais Serviços</h3>
+            <table>
+              <tr><th>Serviço</th><th>Empresa</th><th>Espaço Grátis</th><th>Diferencial</th></tr>
+              <tr><td>OneDrive</td><td>Microsoft</td><td>5 GB</td><td>Integrado Windows + Office</td></tr>
+              <tr><td>Google Drive</td><td>Google</td><td>15 GB</td><td>Mais grátis + Docs colaborativos</td></tr>
+              <tr><td>Dropbox</td><td>Dropbox Inc.</td><td>2 GB</td><td>Mais antigo, robusto</td></tr>
+              <tr><td>iCloud</td><td>Apple</td><td>5 GB</td><td>Foco em usuários Apple</td></tr>
+              <tr><td>Mega</td><td>Mega NZ</td><td>20 GB</td><td>Foco em criptografia</td></tr>
+              <tr><td>pCloud</td><td>pCloud AG</td><td>10 GB</td><td>Plano vitalício disponível</td></tr>
+            </table>
+
+            <h3>Vantagens da Nuvem</h3>
+            <div class="success-box">
+              <h4>✅ Por Que Usar?</h4>
+              <p>• <strong>Acesso de qualquer lugar</strong> (PC, celular, navegador)<br>
+              • <strong>Backup automático</strong> de arquivos<br>
+              • <strong>Sincronização</strong> entre dispositivos<br>
+              • <strong>Compartilhamento fácil</strong> (links públicos ou restritos)<br>
+              • <strong>Colaboração em tempo real</strong> (Google Docs, Office 365)<br>
+              • <strong>Histórico de versões</strong> (recupera arquivos modificados)</p>
+            </div>
+
+            <h3>Cuidados com a Nuvem</h3>
+            <div class="warning-box">
+              <h4>⚠️ Atenção!</h4>
+              <p>• Use <strong>senhas fortes</strong> + autenticação em 2 fatores (2FA)<br>
+              • Não armazene <strong>dados pessoais sensíveis</strong> sem criptografia<br>
+              • Cuidado com <strong>compartilhamentos públicos</strong> — qualquer um pode ver<br>
+              • Verifique <strong>termos de uso</strong> e LGPD<br>
+              • Faça <strong>backup local</strong> de coisas críticas (a nuvem pode falhar!)</p>
+            </div>
+
+            <h3>Sincronização Local + Nuvem</h3>
+            <div class="info-box">
+              <h4>💻 Como Funciona</h4>
+              <p>1. Instale o aplicativo (OneDrive, Google Drive, etc.)<br>
+              2. Faça login com sua conta<br>
+              3. Uma pasta é criada no seu PC (ex: "OneDrive")<br>
+              4. Tudo que você coloca lá é <strong>automaticamente enviado à nuvem</strong><br>
+              5. E vice-versa: o que está na nuvem é baixado no PC<br>
+              6. Você pode escolher quais pastas sincronizar para economizar espaço</p>
+            </div>
+
+            <h3>Compartilhamento via Nuvem</h3>
+            <div class="success-box">
+              <h4>🔗 Mais Prático que Compartilhamento Local!</h4>
+              <p>Vantagens de mandar arquivos via Google Drive ou WeTransfer:</p>
+              <p>✅ Funciona com pessoas fora da sua rede<br>
+              ✅ Não precisa abrir portas no firewall<br>
+              ✅ Pode definir senha e prazo de validade<br>
+              ✅ Pode revogar acesso a qualquer momento<br>
+              ✅ Permite arquivos grandes (não tem limite como email)</p>
+            </div>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Hands-on Completo</h4>
+              <p><strong>Parte 1 — Impressora:</strong></p>
+              <p>1. Compartilhe uma impressora USB do PC1<br>
+              2. Conecte do PC2<br>
+              3. Imprima uma página de teste</p>
+              <p><strong>Parte 2 — Nuvem:</strong></p>
+              <p>1. Crie/use conta no Google Drive<br>
+              2. Crie uma pasta "Aula_Redes"<br>
+              3. Faça upload de 3 arquivos<br>
+              4. Compartilhe com seu colega (apenas leitura)<br>
+              5. Colega tente editar — mostre o que acontece<br>
+              6. Troque para "Editor" e colaborem em um documento Google Docs em tempo real</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual a principal vantagem de uma impressora de rede (com IP próprio) sobre uma compartilhada via PC?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">É mais barata</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Não precisa de um PC ligado para outros usarem</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Imprime mais rápido sempre</div>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      nome: "MÓDULO VIII — Segurança e Diagnóstico",
+      aulas: [
+        {
+          titulo: "Aula 19 — Segurança Básica em Redes",
+          tag: "Segurança",
+          conteudo: `
+            <h3>Por Que Segurança é CRÍTICA?</h3>
+            <div class="warning-box">
+              <h4>🚨 Números Alarmantes</h4>
+              <p>• A cada <strong>11 segundos</strong> uma empresa é atacada por ransomware no mundo<br>
+              • O Brasil é o <strong>5º país mais atacado</strong> globalmente<br>
+              • <strong>95% das brechas</strong> de segurança são causadas por erro humano<br>
+              • Custo médio de um vazamento de dados: <strong>US$ 4,45 milhões</strong></p>
+            </div>
+
+            <h3>Principais Ameaças à Segurança</h3>
+
+            <h3>1. 🦠 Malware (Software Malicioso)</h3>
+            <div class="cards">
+              <div class="card"><h4>Vírus</h4><p>Se anexa a arquivos e se replica quando executado.</p></div>
+              <div class="card"><h4>Worm</h4><p>Se propaga sozinho pela rede, sem precisar de hospedeiro.</p></div>
+              <div class="card"><h4>Trojan (Cavalo de Troia)</h4><p>Disfarçado de programa útil. Abre porta para invasão.</p></div>
+              <div class="card"><h4>Ransomware</h4><p>Criptografa seus arquivos e cobra resgate. <strong>Ameaça #1 atual!</strong></p></div>
+              <div class="card"><h4>Spyware</h4><p>Espiona sua atividade e rouba dados pessoais.</p></div>
+              <div class="card"><h4>Adware</h4><p>Exibe anúncios indesejados. Geralmente "menos perigoso".</p></div>
+            </div>
+
+            <h3>2. 🎣 Phishing</h3>
+            <div class="warning-box">
+              <h4>O Golpe Mais Comum</h4>
+              <p>Mensagens (e-mail, SMS, WhatsApp) que se passam por instituições legítimas (bancos, lojas, governo) para roubar dados.</p>
+              <p><strong>Como identificar:</strong></p>
+              <p>❌ Erros de português ou tradução estranha<br>
+              ❌ Urgência exagerada ("Sua conta será cancelada em 24h!")<br>
+              ❌ Endereço de email suspeito (sac@banc0bradesco.com)<br>
+              ❌ Links encurtados (bit.ly, tinyurl)<br>
+              ❌ Pedem dados pessoais que o banco já tem</p>
+            </div>
+
+            <h3>3. 🛡️ Ataques à Rede</h3>
+            <ul>
+              <li><strong>DDoS:</strong> sobrecarrega o servidor com milhões de requisições</li>
+              <li><strong>Man-in-the-Middle:</strong> hacker se coloca entre você e o destino</li>
+              <li><strong>Brute Force:</strong> testa milhões de senhas até acertar</li>
+              <li><strong>SQL Injection:</strong> manipula banco de dados via formulários web</li>
+              <li><strong>Engenharia Social:</strong> manipulação psicológica para obter dados</li>
+            </ul>
+
+            <h3>Camadas de Proteção 🛡️</h3>
+
+            <h3>Camada 1: Firewall 🔥</h3>
+            <div class="info-box">
+              <h4>O "Porteiro" da Rede</h4>
+              <p>Filtra todo o tráfego que entra e sai, bloqueando o que não foi permitido.</p>
+              <p><strong>Tipos:</strong></p>
+              <p>• <strong>Firewall do Windows:</strong> básico, já vem ativado<br>
+              • <strong>Firewall do Roteador:</strong> protege toda a rede<br>
+              • <strong>Firewall dedicado:</strong> appliance físico/virtual (em empresas)<br>
+              • <strong>NGFW:</strong> Next Generation Firewall (com IPS, antivírus, etc.)</p>
+            </div>
+
+            <h3>Camada 2: Antivírus / Antimalware</h3>
+            <div class="cards">
+              <div class="card"><h4>🛡️ Windows Defender</h4><p>Grátis, já vem no Windows 10/11. Muito bom!</p></div>
+              <div class="card"><h4>🛡️ Avast / AVG</h4><p>Versão gratuita populares.</p></div>
+              <div class="card"><h4>🛡️ Kaspersky</h4><p>Pago, top em proteção.</p></div>
+              <div class="card"><h4>🛡️ Bitdefender</h4><p>Pago, ótimo desempenho.</p></div>
+              <div class="card"><h4>🛡️ Malwarebytes</h4><p>Especialista em remoção de malware específico.</p></div>
+            </div>
+
+            <h3>Camada 3: Atualizações</h3>
+            <div class="warning-box">
+              <h4>⚠️ Não Adie!</h4>
+              <p>A maioria dos ataques explora <strong>vulnerabilidades conhecidas</strong> que já têm correção. Mantenha SEMPRE atualizado:</p>
+              <p>• Sistema operacional<br>
+              • Navegador<br>
+              • Antivírus<br>
+              • Roteador (firmware)<br>
+              • Aplicativos</p>
+            </div>
+
+            <h3>Camada 4: Senhas Fortes 🔑</h3>
+            <div class="success-box">
+              <h4>📋 Boas Práticas</h4>
+              <p>✅ <strong>Mínimo 12 caracteres</strong> (idealmente 16+)<br>
+              ✅ Misture <strong>letras maiúsculas, minúsculas, números e símbolos</strong><br>
+              ✅ Senha <strong>diferente</strong> para cada serviço<br>
+              ✅ Use <strong>autenticação em 2 fatores (2FA)</strong><br>
+              ✅ Use um <strong>gerenciador de senhas</strong> (Bitwarden, 1Password, LastPass)<br>
+              ❌ NUNCA use: 123456, senha, qwerty, datas, nomes<br>
+              ❌ NUNCA reutilize senhas entre contas</p>
+            </div>
+
+            <h3>Como Criar uma Senha Forte</h3>
+            <div class="info-box">
+              <h4>💡 Dica do Especialista</h4>
+              <p><strong>Frase + substituições:</strong></p>
+              <p>Pense em uma frase: <em>"Eu amo pizza com queijo extra"</em></p>
+              <p>Transforme: <strong>EuAmoP1zzaComQu31j0Extra!</strong></p>
+              <p>Você lembra, mas é virtualmente impossível de quebrar.</p>
+            </div>
+
+            <h3>Autenticação em 2 Fatores (2FA) 🔐</h3>
+            <div class="success-box">
+              <h4>Sua Melhor Defesa!</h4>
+              <p>Mesmo que roubem sua senha, não conseguem entrar sem o segundo fator.</p>
+              <p><strong>Métodos:</strong></p>
+              <p>📱 SMS (menos seguro)<br>
+              📱 App autenticador (Google Authenticator, Authy)<br>
+              🔑 Chave física (YubiKey)<br>
+              👆 Biometria (digital, face)</p>
+              <p>📌 <strong>Ative em TUDO que for importante:</strong> email, banco, redes sociais, contas em nuvem!</p>
+            </div>
+
+            <h3>Backup — A Última Linha de Defesa</h3>
+            <div class="info-box">
+              <h4>📦 Regra 3-2-1</h4>
+              <p>Tenha sempre:</p>
+              <p>• <strong>3 cópias</strong> dos dados importantes<br>
+              • Em <strong>2 mídias</strong> diferentes (HD + nuvem, por exemplo)<br>
+              • <strong>1 cópia offline</strong> (não conectada à rede)</p>
+              <p>Se sofrer ransomware, você ainda tem os arquivos!</p>
+            </div>
+
+            <h3>Comportamento Seguro 🧠</h3>
+            <div class="success-box">
+              <h4>Hábitos que Salvam</h4>
+              <p>✅ <strong>Pense antes de clicar</strong> em links<br>
+              ✅ <strong>Verifique o remetente</strong> de emails suspeitos<br>
+              ✅ <strong>Nunca forneça senhas</strong> por telefone ou email<br>
+              ✅ <strong>Cuidado com Wi-Fi público</strong> — use VPN<br>
+              ✅ <strong>Faça logout</strong> em PCs compartilhados<br>
+              ✅ <strong>Não baixe</strong> de fontes desconhecidas<br>
+              ✅ <strong>Bloqueie o computador</strong> quando se afastar<br>
+              ✅ Mantenha-se <strong>atualizado</strong> sobre golpes</p>
+            </div>
+
+            <h3>LGPD — Lei Geral de Proteção de Dados 🇧🇷</h3>
+            <div class="info-box">
+              <h4>📜 Lei 13.709/2018</h4>
+              <p>Regulamenta como empresas tratam dados pessoais no Brasil.</p>
+              <p><strong>Pontos principais:</strong></p>
+              <p>• Empresas precisam ter <strong>consentimento</strong> para coletar dados<br>
+              • Você tem direito a saber <strong>quais dados têm sobre você</strong><br>
+              • Pode <strong>exigir exclusão</strong> dos seus dados<br>
+              • Vazamento de dados deve ser <strong>comunicado em 72h</strong><br>
+              • Multas até <strong>R$ 50 milhões</strong> por infração<br>
+              • <strong>Técnicos de TI</strong> têm grande responsabilidade!</p>
+            </div>
+
+            <h3>Atividade Prática 🛠️</h3>
+            <div class="success-box">
+              <h4>Auditoria de Segurança Pessoal</h4>
+              <p>Cada aluno deve fazer um <strong>checkup de segurança digital</strong>:</p>
+              <p>1. Verificar se Windows Defender está ativo<br>
+              2. Verificar atualizações pendentes do sistema<br>
+              3. Listar contas com 2FA ativo (e ativar nas que faltam)<br>
+              4. Testar a força de suas senhas em <strong>haveibeenpwned.com</strong><br>
+              5. Configurar firewall do roteador (com auxílio do professor)<br>
+              6. Verificar se há backups recentes<br>
+              7. Apresentar relatório pessoal (sem expor dados sensíveis)</p>
+            </div>
+
+            <div class="quiz">
+              <h4>🎯 Verificação de Aprendizado</h4>
+              <p><strong>Qual a melhor forma de proteger uma conta importante mesmo que a senha vaze?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Usar senha muito longa</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Ativar autenticação em 2 fatores (2FA)</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Trocar a senha toda semana</div>
+            </div>
+          `
+        },
+        {
+          titulo: "Aula 20 — Diagnóstico e Avaliação Final",
+          tag: "Avaliação",
+          conteudo: `
+            <h3>Parabéns! Chegou ao Final do Curso! 🎉</h3>
+            <div class="success-box">
+              <h4>O Que Você Aprendeu em 80 Horas</h4>
+              <p>Você completou uma jornada de aprendizado completa em Redes de Computadores. Está pronto para o mercado de trabalho ou para avançar para níveis mais técnicos!</p>
+            </div>
+
+            <h3>Comandos de Diagnóstico — Resumão</h3>
+            <p>Estes comandos são <strong>essenciais</strong> para qualquer técnico. Decore-os!</p>
+
+            <h3>1. ipconfig (Windows) / ifconfig (Linux)</h3>
+            <p>Mostra a configuração de rede do seu computador.</p>
+            <div class="code">
+ipconfig            → básico
+ipconfig /all       → detalhado
+ipconfig /release   → libera IP do DHCP
+ipconfig /renew     → solicita novo IP
+ipconfig /flushdns  → limpa cache DNS
+            </div>
+
+            <h3>2. ping</h3>
+            <p>Testa conectividade com outro dispositivo.</p>
+            <div class="code">
+ping 192.168.1.1       → testa gateway
+ping google.com        → testa internet
+ping -t google.com     → contínuo (Windows)
+ping -c 4 google.com   → 4 vezes (Linux)
+            </div>
+            <div class="info-box">
+              <h4>📊 Interpretando o Ping</h4>
+              <p><strong>Reply from... time=2ms</strong> → conexão OK, rápida<br>
+              <strong>Request timed out</strong> → sem resposta (problema!)<br>
+              <strong>Destination host unreachable</strong> → sem rota</p>
+            </div>
+
+            <h3>3. tracert (Windows) / traceroute (Linux)</h3>
+            <p>Mostra o caminho que os pacotes percorrem até o destino.</p>
+            <div class="code">
+tracert google.com     → mostra cada salto
+            </div>
+
+            <h3>4. nslookup</h3>
+            <p>Consulta servidores DNS.</p>
+            <div class="code">
+nslookup google.com           → resolve nome
+nslookup google.com 8.8.8.8   → usa DNS específico
+            </div>
+
+            <h3>5. netstat</h3>
+            <p>Mostra conexões de rede ativas.</p>
+            <div class="code">
+netstat -an     → todas as conexões
+netstat -ano    → mostra PID do processo
+            </div>
+
+            <h3>Diagnóstico Sistemático de Problemas</h3>
+            <div class="success-box">
+              <h4>🔍 Metodologia do Bom Técnico</h4>
+              <p><strong>Passo 1:</strong> O cliente confirma o problema<br>
+              <strong>Passo 2:</strong> Verifique o cabeamento (LEDs acesos?)<br>
+              <strong>Passo 3:</strong> <code>ipconfig</code> — IP correto?<br>
+              <strong>Passo 4:</strong> <code>ping 127.0.0.1</code> — placa de rede OK?<br>
+              <strong>Passo 5:</strong> <code>ping IP-do-gateway</code> — rede local OK?<br>
+              <strong>Passo 6:</strong> <code>ping 8.8.8.8</code> — internet OK?<br>
+              <strong>Passo 7:</strong> <code>ping google.com</code> — DNS OK?<br>
+              <strong>Passo 8:</strong> Identificou o problema → aplica solução</p>
+            </div>
+
+            <h3>Tabela de Diagnóstico Rápido</h3>
+            <table>
+              <tr><th>Sintoma</th><th>Comando para Testar</th><th>Causa Provável</th></tr>
+              <tr><td>"Sem conexão"</td><td>ipconfig</td><td>Cabo, DHCP, placa</td></tr>
+              <tr><td>"Sem internet"</td><td>ping 8.8.8.8</td><td>Gateway, link da operadora</td></tr>
+              <tr><td>"Sem internet mas sites IP funcionam"</td><td>nslookup</td><td>DNS</td></tr>
+              <tr><td>"Internet lenta"</td><td>ping google.com</td><td>Latência alta, saturação</td></tr>
+              <tr><td>"Apenas alguns sites não abrem"</td><td>tracert</td><td>Roteamento, firewall</td></tr>
+              <tr><td>"IP 169.254..."</td><td>ipconfig /release /renew</td><td>DHCP não respondeu</td></tr>
+            </table>
+
+            <h3>Revisão Geral — Pontos-Chave do Curso</h3>
+            <div class="cards">
+              <div class="card"><h4>📚 Módulo I</h4><p>Conceitos, classificação (PAN, LAN, MAN, WAN), topologias (estrela é a mais usada)</p></div>
+              <div class="card"><h4>🌐 Módulo II</h4><p>OSI (7 camadas), TCP/IP (4 camadas), TCP confiável, UDP rápido</p></div>
+              <div class="card"><h4>🔌 Módulo III</h4><p>Cabos par trançado, fibra, cabeamento estruturado, crimpagem T568B</p></div>
+              <div class="card"><h4>⚡ Módulo IV</h4><p>Switch (LAN), Roteador (entre redes), Access Point (Wi-Fi)</p></div>
+              <div class="card"><h4>🎯 Módulo V</h4><p>IPv4 (4,3 bilhões), IPs privados (192.168.x.x), IPv6 (futuro)</p></div>
+              <div class="card"><h4>📡 Módulo VI</h4><p>Wi-Fi 2.4/5GHz, canais 1-6-11, WPA2/WPA3, padrões 802.11</p></div>
+              <div class="card"><h4>📁 Módulo VII</h4><p>Compartilhamento de pastas, impressoras, serviços em nuvem</p></div>
+              <div class="card"><h4>🛡️ Módulo VIII</h4><p>Firewall, antivírus, 2FA, senhas fortes, LGPD, diagnóstico</p></div>
+            </div>
+
+            <h3>Banco de Questões Modelo</h3>
+            <div class="quiz">
+              <h4>📝 Questão 1</h4>
+              <p><strong>Qual camada do modelo OSI é responsável pelo endereçamento lógico (IP)?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Enlace</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Rede</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Transporte</div>
+            </div>
+
+            <div class="quiz">
+              <h4>📝 Questão 2</h4>
+              <p><strong>192.168.1.0/24 é uma rede privada da classe:</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">A</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">B</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">C</div>
+            </div>
+
+            <div class="quiz">
+              <h4>📝 Questão 3</h4>
+              <p><strong>Qual protocolo da camada de transporte é orientado à conexão e confiável?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">TCP</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">UDP</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">IP</div>
+            </div>
+
+            <div class="quiz">
+              <h4>📝 Questão 4</h4>
+              <p><strong>Para conectar 2 PCs diretamente sem switch, qual cabo deve ser usado?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Cabo direto</div>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Cabo crossover</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Cabo coaxial</div>
+            </div>
+
+            <div class="quiz">
+              <h4>📝 Questão 5</h4>
+              <p><strong>O que significa SSID em uma rede Wi-Fi?</strong></p>
+              <div class="quiz-option" onclick="checkAnswer(this, true)">Nome da rede sem fio</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Senha da rede</div>
+              <div class="quiz-option" onclick="checkAnswer(this, false)">Endereço MAC do roteador</div>
+            </div>
+
+            <h3>Próximos Passos na Carreira 🚀</h3>
+            <div class="cards">
+              <div class="card"><h4>🎓 Especializações</h4><p>Cisco CCNA, CompTIA Network+, MikroTik MTCNA, Linux LPI</p></div>
+              <div class="card"><h4>☁️ Cloud</h4><p>AWS Certified, Microsoft Azure, Google Cloud Platform</p></div>
+              <div class="card"><h4>🛡️ Segurança</h4><p>CompTIA Security+, CEH, Ethical Hacker, SOC Analyst</p></div>
+              <div class="card"><h4>📡 Wireless</h4><p>CWNA, ekahau, Wireless Engineer</p></div>
+              <div class="card"><h4>📊 SysAdmin</h4><p>Windows Server, Linux Server, Active Directory</p></div>
+              <div class="card"><h4>🌐 DevOps</h4><p>Docker, Kubernetes, CI/CD, Automação</p></div>
+            </div>
+
+            <h3>Estrutura da Avaliação Final</h3>
+            <table>
+              <tr><th>Etapa</th><th>Tempo</th><th>Peso</th></tr>
+              <tr><td>Prova teórica (25 questões)</td><td>60 min</td><td>40%</td></tr>
+              <tr><td>Prática: Crimpagem (1 cabo direto + 1 crossover, testados)</td><td>30 min</td><td>20%</td></tr>
+              <tr><td>Prática: Configuração de rede (IP, gateway, DNS) + ping</td><td>30 min</td><td>20%</td></tr>
+              <tr><td>Prática: Configuração de roteador Wi-Fi seguro</td><td>30 min</td><td>20%</td></tr>
+            </table>
+
+            <h3>Mensagem Final do Instrutor 🙏</h3>
+            <div class="success-box">
+              <h4>Você Está Pronto!</h4>
+              <p>O mundo precisa de bons profissionais de redes — e você agora é um deles!</p>
+              <p>Lembre-se que <strong>tecnologia evolui constantemente</strong>. Nunca pare de aprender, leia notícias do setor, participe de comunidades online (fóruns, grupos no Telegram, LinkedIn) e busque certificações.</p>
+              <p>O <strong>mercado de TI é meritocrático</strong>: com esforço, dedicação e atualização constante, você pode chegar onde quiser!</p>
+              <p style="text-align:center;font-size:18px;margin-top:20px;"><strong>🎓 BOA SORTE EM SUA NOVA CARREIRA! 🚀</strong></p>
+            </div>
+
+            <h3>Recursos para Continuar Aprendendo</h3>
+            <ul>
+              <li><strong>YouTube:</strong> Bóson Treinamentos, Curso em Vídeo, Linuxtips</li>
+              <li><strong>Cursos online:</strong> Alura, Udemy, Cisco NetAcad (gratuito)</li>
+              <li><strong>Livros:</strong> "Redes de Computadores" de Tanenbaum; "Top-Down" de Kurose</li>
+              <li><strong>Simuladores:</strong> Cisco Packet Tracer, GNS3, EVE-NG</li>
+              <li><strong>Comunidades:</strong> Reddit r/networking, fóruns brasileiros, LinkedIn</li>
+              <li><strong>Eventos:</strong> Mikrotik User Meeting (MUM), Futurecom, Campus Party</li>
+            </ul>
+          `
+        }
+      ]
+    }
+  ]
+};
+
+// ============================ APP LOGIC ============================
+
+let currentModule = 0;
+let currentLesson = 0;
+
+function renderMenu() {
+  const menu = document.getElementById('menu');
+  menu.innerHTML = curso.modulos.map((mod, mi) => `
+    <div class="module ${mi === 0 ? 'open' : ''}" id="mod-${mi}">
+      <div class="module-header" onclick="toggleModule(${mi})">
+        <span>${mod.nome}</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="lessons">
+        ${mod.aulas.map((aula, ai) => `
+          <div class="lesson ${mi === 0 && ai === 0 ? 'active' : ''}"
+               onclick="showLesson(${mi}, ${ai})"
+               id="lesson-${mi}-${ai}">
+            ${aula.titulo}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleModule(mi) {
+  document.getElementById(`mod-${mi}`).classList.toggle('open');
+}
+
+function showLesson(mi, ai) {
+  currentModule = mi;
+  currentLesson = ai;
+  document.querySelectorAll('.lesson').forEach(l => l.classList.remove('active'));
+  document.getElementById(`lesson-${mi}-${ai}`).classList.add('active');
+  document.getElementById(`mod-${mi}`).classList.add('open');
+
+  const aula = curso.modulos[mi].aulas[ai];
+  const totalAulas = curso.modulos.reduce((s, m) => s + m.aulas.length, 0);
+  let aulaIndex = 0;
+  for (let i = 0; i < mi; i++) aulaIndex += curso.modulos[i].aulas.length;
+  aulaIndex += ai + 1;
+  const progress = Math.round((aulaIndex / totalAulas) * 100);
+
+  document.getElementById('content').innerHTML = `
+    <div class="slide">
+      <div class="slide-header">
+        <span class="slide-tag">${aula.tag}</span>
+        <h2>${aula.titulo}</h2>
+        <p class="slide-subtitle">Aula ${aulaIndex} de ${totalAulas}</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+      </div>
+      ${aula.conteudo}
+      <div class="nav-buttons">
+        <button class="btn" onclick="prevLesson()" ${aulaIndex === 1 ? 'disabled' : ''}>← Aula Anterior</button>
+        <button class="btn" onclick="nextLesson()" ${aulaIndex === totalAulas ? 'disabled' : ''}>Próxima Aula →</button>
+      </div>
+    </div>
+  `;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextLesson() {
+  const mod = curso.modulos[currentModule];
+  if (currentLesson < mod.aulas.length - 1) {
+    showLesson(currentModule, currentLesson + 1);
+  } else if (currentModule < curso.modulos.length - 1) {
+    showLesson(currentModule + 1, 0);
+  }
+}
+
+function prevLesson() {
+  if (currentLesson > 0) {
+    showLesson(currentModule, currentLesson - 1);
+  } else if (currentModule > 0) {
+    const prevMod = curso.modulos[currentModule - 1];
+    showLesson(currentModule - 1, prevMod.aulas.length - 1);
+  }
+}
+
+function checkAnswer(el, correct) {
+  el.parentNode.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('correct', 'wrong'));
+  el.classList.add(correct ? 'correct' : 'wrong');
+}
+
+renderMenu();
+showLesson(0, 0);
+</script>
+
+</body>
+</html>
